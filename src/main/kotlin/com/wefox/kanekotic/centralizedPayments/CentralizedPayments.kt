@@ -5,6 +5,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import java.util.*
 
+
 object CentralizedPayments {
     const val OFFLINE_INPUT_TOPIC = "offline"
     const val ONLINE_INPUT_TOPIC = "online"
@@ -22,3 +23,4 @@ object CentralizedPayments {
             return props
         }
 }
+

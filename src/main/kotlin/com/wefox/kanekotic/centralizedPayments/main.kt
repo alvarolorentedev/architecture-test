@@ -1,16 +1,26 @@
 package com.wefox.kanekotic.centralizedPayments
 
 import com.wefox.kanekotic.centralizedPayments.CentralizedPayments.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
+import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
+import org.apache.kafka.streams.kstream.Consumed
 import java.util.concurrent.CountDownLatch
 
 
 fun main() {
     val props = streamsConfig
     val builder = StreamsBuilder()
-    builder.stream<String, String>(CentralizedPayments.OFFLINE_INPUT_TOPIC).mapValues { value -> println(value) }
-    builder.stream<String, String>(CentralizedPayments.ONLINE_INPUT_TOPIC).mapValues { value -> println(value) }
+
+    val paymentSerde = PaymentSerde.get()
+
+    builder.stream(CentralizedPayments.OFFLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde)).peek { key, value ->
+            println("key = $key, value = $value")
+        }
+    builder.stream(CentralizedPayments.ONLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde)).peek { key, value ->
+        println("key = $key, value = $value")
+    }
     val streams = KafkaStreams(builder.build(), props)
     val latch = CountDownLatch(1)
 
