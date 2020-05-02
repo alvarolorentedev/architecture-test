@@ -12,6 +12,7 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
 import java.sql.DriverManager
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 
@@ -24,9 +25,7 @@ fun main() {
     if (toggles.offline) {
         val paymentPersistor = PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
         val stream = builder.stream(KafkaConfiguration.OFFLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
-            .peek { key, value ->
-                println("key = $key, value = $value")
-            }
+
         SavePaymentProcessor(stream, paymentPersistor)
     }
 
@@ -37,6 +36,10 @@ fun main() {
     }
     val streams = KafkaStreams(builder.build(), props)
     val latch = CountDownLatch(1)
+
+    streams.setUncaughtExceptionHandler { _, e ->
+        println("uncaught")
+   }
 
     Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
         override fun run() {

@@ -23,6 +23,7 @@ dependencies {
     testImplementation "io.mockk:mockk:1.10.0"
     testCompile "com.github.tomakehurst:wiremock-standalone:2.26.3"
     implementation 'com.github.kittinunf.fuel:fuel:2.2.0'
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
 
 }
 

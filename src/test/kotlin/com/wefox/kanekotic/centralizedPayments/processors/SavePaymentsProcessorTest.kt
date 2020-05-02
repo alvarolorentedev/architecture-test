@@ -2,6 +2,7 @@ package com.wefox.kanekotic.centralizedPayments.processors
 
 import com.wefox.kanekotic.centralizedPayments.Faker
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
+import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
@@ -23,8 +24,8 @@ import org.junit.jupiter.api.Test
 
 class SavePaymentsProcessorTest {
     private var testDriver: TopologyTestDriver? = null
-    private var inputTopic: TestInputTopic<String, Payment>? = null
-    private var outputTopic: TestOutputTopic<String, Payment>? = null
+    private var inputTopic: TestInputTopic<String, GenericTypeMessage<Payment>>? = null
+    private var outputTopic: TestOutputTopic<String, GenericTypeMessage<Payment>>? = null
 
     @MockK
     private lateinit var paymentPersistor: PaymentPersistor
@@ -38,7 +39,7 @@ class SavePaymentsProcessorTest {
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
 
         val source =
-            builder.stream<String, Payment>("test-input", Consumed.with(Serdes.String(), paymentSerde.serde))
+            builder.stream("test-input", Consumed.with(Serdes.String(), paymentSerde.serde))
 
         paymentPersistor = mockk(relaxed = true)
         SavePaymentProcessor(source, paymentPersistor).to("test-output")
@@ -69,7 +70,7 @@ class SavePaymentsProcessorTest {
     @Test
     fun shouldCallSavePayment() {
         val payment = Faker.payment()
-        inputTopic?.pipeInput("pepe",payment)
+        inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
         verify { paymentPersistor.save(payment) }
     }
 }

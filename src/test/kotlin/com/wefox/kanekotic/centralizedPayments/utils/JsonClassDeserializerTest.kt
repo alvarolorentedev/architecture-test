@@ -1,5 +1,7 @@
 package com.wefox.kanekotic.centralizedPayments.utils
 
+import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
+import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.junit.jupiter.api.Assertions
@@ -10,9 +12,10 @@ import java.util.*
 
 class JsonClassDeserializerTest {
 
-    private lateinit var subject: Deserializer<Example>
-
     data class Example(val text: String)
+
+    private lateinit var subject: Deserializer<GenericTypeMessage<Example>>
+
 
     @BeforeEach
     fun setup() {
@@ -43,6 +46,7 @@ class JsonClassDeserializerTest {
     @Test
     fun shouldReturnIfClassJson() {
         val result = subject.deserialize("", "{ \"text\": \"pepe\" }".toByteArray())
-        Assertions.assertEquals(result, Example("pepe"))
+        Assertions.assertEquals(result.value, Example("pepe"))
+        Assertions.assertArrayEquals(result.error, emptyArray())
     }
 }

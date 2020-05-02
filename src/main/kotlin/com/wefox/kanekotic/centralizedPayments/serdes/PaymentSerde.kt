@@ -1,5 +1,6 @@
 package com.wefox.kanekotic.centralizedPayments.serdes
 
+import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.utils.JsonClassDeserializer
 import com.wefox.kanekotic.centralizedPayments.utils.JsonClassSerializer
@@ -10,9 +11,9 @@ import org.apache.kafka.common.serialization.Serializer
 import java.util.HashMap
 
 class PaymentSerde private constructor() {
-    val serializer: Serializer<Payment>
-    val deserializer: Deserializer<Payment>
-    val serde: Serde<Payment>
+    val serializer: Serializer<GenericTypeMessage<Payment>>
+    val deserializer: Deserializer<GenericTypeMessage<Payment>>
+    val serde: Serde<GenericTypeMessage<Payment>>
 
     init {
         val serdeProps: HashMap<String, Any> = HashMap()
