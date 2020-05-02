@@ -1,4 +1,4 @@
-package com.wefox.kanekotic.centralizedPayments
+package com.wefox.kanekotic.centralizedPayments.configurations
 
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
 import org.apache.kafka.clients.consumer.ConsumerConfig

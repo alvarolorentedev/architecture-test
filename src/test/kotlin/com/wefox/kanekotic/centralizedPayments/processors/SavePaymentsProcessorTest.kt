@@ -1,6 +1,7 @@
 package com.wefox.kanekotic.centralizedPayments.processors
 
-import com.wefox.kanekotic.centralizedPayments.KafkaConfiguration
+import com.wefox.kanekotic.centralizedPayments.Faker
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
@@ -67,12 +68,8 @@ class SavePaymentsProcessorTest {
 
     @Test
     fun shouldCallSavePayment() {
-        val payment = GetFakePayment()
+        val payment = Faker.payment()
         inputTopic?.pipeInput("pepe",payment)
         verify { paymentPersistor.save(payment) }
-    }
-
-    fun GetFakePayment() : Payment {
-        return Payment("", 1234, "offline", "", 100, 10)
     }
 }

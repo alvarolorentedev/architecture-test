@@ -1,6 +1,8 @@
 package com.wefox.kanekotic.centralizedPayments
 
-import com.wefox.kanekotic.centralizedPayments.KafkaConfiguration.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Toggles
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.processors.SavePaymentProcessor
@@ -9,6 +11,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
+import java.sql.DriverManager
 import java.util.concurrent.CountDownLatch
 
 
@@ -19,7 +22,7 @@ fun main() {
     val paymentSerde = PaymentSerde.get()
 
     if (toggles.offline) {
-        val paymentPersistor = PaymentPersistor()
+        val paymentPersistor = PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
         val stream = builder.stream(KafkaConfiguration.OFFLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
             .peek { key, value ->
                 println("key = $key, value = $value")
