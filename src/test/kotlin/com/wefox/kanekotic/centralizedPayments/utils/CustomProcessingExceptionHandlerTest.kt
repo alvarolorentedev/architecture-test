@@ -23,12 +23,17 @@ class CustomProcessingExceptionHandlerTest {
         val record = mockk<ProducerRecord<ByteArray, ByteArray>>(relaxed = true)
         val payment = Faker.payment()
         every { record.value() } returns PaymentSerde.get().serializer.serialize("", payment)
-        val subject = CustomProcessingExceptionHandler()
-        subject.configure(mutableMapOf("logHandler" to logClient))
+        val subject = CustomProcessingExceptionHandlerStub(logClient)
         val result = subject.handle(record, exception)
         Assertions.assertEquals(ProductionExceptionHandler.ProductionExceptionHandlerResponse.CONTINUE, result)
         verify { logClient.logError(payment, exception) }
 
     }
 
+}
+
+class CustomProcessingExceptionHandlerStub(mockLogClient: LogClient) : CustomProcessingExceptionHandler() {
+    init {
+        logHandler = mockLogClient
+    }
 }

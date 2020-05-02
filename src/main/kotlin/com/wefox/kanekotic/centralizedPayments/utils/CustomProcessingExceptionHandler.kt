@@ -1,14 +1,12 @@
 package com.wefox.kanekotic.centralizedPayments.utils
 
-import com.github.kittinunf.fuel.httpPost
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.streams.errors.ProductionExceptionHandler
-import com.github.kittinunf.result.Result
 import com.wefox.kanekotic.centralizedPayments.clients.LogClient
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.streams.errors.ProductionExceptionHandler
 
-class CustomProcessingExceptionHandler : ProductionExceptionHandler {
-    private lateinit var logHandler: LogClient
+open class CustomProcessingExceptionHandler : ProductionExceptionHandler {
+    protected var logHandler: LogClient = LogClient
 
     override fun handle(
         record: ProducerRecord<ByteArray, ByteArray>,
@@ -19,7 +17,5 @@ class CustomProcessingExceptionHandler : ProductionExceptionHandler {
         return ProductionExceptionHandler.ProductionExceptionHandlerResponse.CONTINUE
     }
 
-    override fun configure(configs: MutableMap<String, *>?) {
-        logHandler = configs?.get("logHandler") as LogClient
-    }
+    override fun configure(configs: MutableMap<String, *>?) { }
 }

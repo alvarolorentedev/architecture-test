@@ -18,7 +18,7 @@ object KafkaConfiguration {
             props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:29092"
             props[StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG] = 0
             props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
-            props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = CustomProcessingExceptionHandler::class.java
+            props[StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG] = CustomProcessingExceptionHandler::class.java
             return props
         }
 }
