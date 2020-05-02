@@ -1,8 +1,8 @@
 package com.wefox.kanekotic.centralizedPayments.serdes
 
 import com.wefox.kanekotic.centralizedPayments.models.Payment
-import com.wefox.kanekotic.centralizedPayments.serdes.utils.JsonClassDeserializer
-import com.wefox.kanekotic.centralizedPayments.serdes.utils.JsonClassSerializer
+import com.wefox.kanekotic.centralizedPayments.utils.JsonClassDeserializer
+import com.wefox.kanekotic.centralizedPayments.utils.JsonClassSerializer
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes

@@ -1,14 +1,9 @@
-package com.wefox.kanekotic.centralizedPayments.serdes.utils
+package com.wefox.kanekotic.centralizedPayments.utils
 
-import com.wefox.kanekotic.centralizedPayments.models.Payment
-import org.apache.kafka.common.errors.SerializationException
-import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serializer
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
-import java.util.*
 
 class JsonClassSerializerTest {
 

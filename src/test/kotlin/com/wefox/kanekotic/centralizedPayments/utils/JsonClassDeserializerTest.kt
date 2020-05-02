@@ -1,6 +1,5 @@
-package com.wefox.kanekotic.centralizedPayments.serdes.utils
+package com.wefox.kanekotic.centralizedPayments.utils
 
-import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.junit.jupiter.api.Assertions

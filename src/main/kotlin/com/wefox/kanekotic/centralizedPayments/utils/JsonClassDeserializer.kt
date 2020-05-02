@@ -1,4 +1,4 @@
-package com.wefox.kanekotic.centralizedPayments.serdes.utils
+package com.wefox.kanekotic.centralizedPayments.utils
 
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
