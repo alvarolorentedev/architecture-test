@@ -12,7 +12,6 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
 import java.sql.DriverManager
-import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 

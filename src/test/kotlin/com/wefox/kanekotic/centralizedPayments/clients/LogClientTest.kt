@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.sql.SQLException
+import com.wefox.kanekotic.centralizedPayments.models.Error
 
 internal class LogClientTest {
     private val port = 8997
@@ -45,7 +46,7 @@ internal class LogClientTest {
             .inScenario("Scenario")
             .willReturn(WireMock.ok()))
 
-        LogClient.logError(payment, exception)
+        LogClient.logError(payment, Error(exception))
 
         wiremock.verify(
             1,
@@ -82,7 +83,7 @@ internal class LogClientTest {
             .inScenario("Scenario")
             .willReturn(WireMock.ok()))
 
-        LogClient.logError(payment, exception)
+        LogClient.logError(payment, Error(exception))
 
         wiremock.verify(
             1,

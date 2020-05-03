@@ -2,12 +2,13 @@ package com.wefox.kanekotic.centralizedPayments.clients
 
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import java.sql.SQLException
 
 object LogClient {
-    fun logError(payment: Payment, exception: Exception) {
-        val typeError = if (exception is SQLException) "database" else "other"
+    fun logError(payment: Payment, error: Error) {
+        val typeError = if (error.exception is SQLException) "database" else "other"
         val httpAsync = "http://localhost:8997/log"
             .httpPost()
             .header("Content-Type", "application/json")
@@ -15,7 +16,7 @@ object LogClient {
                 """{
                 | 'payment_id': '${payment.payment_id}',
                 | 'error_type': '${typeError}',
-                | 'error_description': '${exception.message}'
+                | 'error_description': '${error.exception.message}'
                 |}""".trimMargin()
             )
             .responseString { _, _, result ->
