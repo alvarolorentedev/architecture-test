@@ -58,8 +58,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    networks:
-      - kafka-net
+    network_mode: host
     depends_on:
       - api-producer
       - postgress
