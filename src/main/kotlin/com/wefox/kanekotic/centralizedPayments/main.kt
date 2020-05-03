@@ -6,6 +6,7 @@ import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfigura
 import com.wefox.kanekotic.centralizedPayments.models.Toggles
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.processors.SavePaymentProcessor
+import com.wefox.kanekotic.centralizedPayments.processors.ValidatePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
