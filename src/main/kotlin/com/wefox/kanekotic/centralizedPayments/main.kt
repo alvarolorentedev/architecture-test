@@ -16,39 +16,52 @@ import org.apache.kafka.streams.kstream.Consumed
 import java.sql.DriverManager
 import java.util.concurrent.CountDownLatch
 
+class Main {
+    companion object {
+        @JvmStatic fun main(args: Array<String>) {
+            val props = streamsConfig
+            val builder = StreamsBuilder()
+            val toggles = Toggles(offline = true, online = false)
+            val paymentSerde = PaymentSerde.get()
+            val paymentPersistor =
+                PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
 
-fun main() {
-    val props = streamsConfig
-    val builder = StreamsBuilder()
-    val toggles = Toggles(offline = true, online = false)
-    val paymentSerde = PaymentSerde.get()
-    val paymentPersistor = PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
+            if (toggles.offline) {
+                val stream = builder.stream(
+                    KafkaConfiguration.OFFLINE_INPUT_TOPIC,
+                    Consumed.with(Serdes.String(), paymentSerde.serde)
+                ).peek{ _, value -> println(value) }
 
-    if (toggles.offline) {
-        val stream = builder.stream(KafkaConfiguration.OFFLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
+                SavePaymentProcessor(stream, paymentPersistor)
+            }
 
-        SavePaymentProcessor(stream, paymentPersistor)
-    }
+            if (toggles.online) {
+                val stream = builder.stream(
+                    KafkaConfiguration.ONLINE_INPUT_TOPIC,
+                    Consumed.with(Serdes.String(), paymentSerde.serde)
+                )
+                val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient)
+                SavePaymentProcessor(validatePaymentProcessor, paymentPersistor)
+            }
+            val streams = KafkaStreams(builder.build(), props)
+            val latch = CountDownLatch(1)
 
-    if (toggles.online) {
-        val stream = builder.stream(KafkaConfiguration.ONLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
-        val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient)
-        SavePaymentProcessor(stream, paymentPersistor)
-    }
-    val streams = KafkaStreams(builder.build(), props)
-    val latch = CountDownLatch(1)
+            Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
+                override fun run() {
+                    streams.close()
+                    latch.countDown()
+                }
+            })
+            try {
+                println("starting...")
+                streams.start()
+                latch.await()
+            } catch (e: Throwable) {
+                System.exit(1)
+            }
 
-    Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
-        override fun run() {
-            streams.close()
-            latch.countDown()
+            println("closing...")
+            System.exit(0)
         }
-    })
-    try {
-        streams.start()
-        latch.await()
-    } catch (e: Throwable) {
-        System.exit(1)
     }
-    System.exit(0)
 }
