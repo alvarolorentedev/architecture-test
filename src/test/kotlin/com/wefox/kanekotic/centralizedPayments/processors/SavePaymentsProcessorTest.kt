@@ -1,12 +1,14 @@
 package com.wefox.kanekotic.centralizedPayments.processors
 
 import com.wefox.kanekotic.centralizedPayments.Faker
+import com.wefox.kanekotic.centralizedPayments.TestSerdes
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,9 +20,12 @@ import org.apache.kafka.streams.TestInputTopic
 import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Produced
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.sql.SQLException
 
 class SavePaymentsProcessorTest {
     private var testDriver: TopologyTestDriver? = null
@@ -34,26 +39,26 @@ class SavePaymentsProcessorTest {
     @BeforeEach
     fun setup() {
         val builder = StreamsBuilder()
-        val paymentSerde = PaymentSerde.get()
+        val testSerdes = TestSerdes.get()
 
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
 
         val source =
-            builder.stream("test-input", Consumed.with(Serdes.String(), paymentSerde.serde))
+            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
 
         paymentPersistor = mockk(relaxed = true)
-        SavePaymentProcessor(source, paymentPersistor).to("test-output")
+        SavePaymentProcessor(source, paymentPersistor).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
             "test-input",
             StringSerializer(),
-            paymentSerde.serializer
+            testSerdes.serializer
         )
         outputTopic = testDriver?.createOutputTopic(
             "test-output",
             StringDeserializer(),
-            paymentSerde.deserializer
+            testSerdes.deserializer
         )
     }
 
@@ -68,9 +73,24 @@ class SavePaymentsProcessorTest {
 
 
     @Test
-    fun shouldCallSavePayment() {
+    fun shouldCallSavePaymentAndReturnSamePaymentWithoutExceptions() {
         val payment = Faker.payment()
         inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
+        val result = outputTopic?.readValue()
+        Assertions.assertArrayEquals(result?.errors, emptyArray())
+        Assertions.assertEquals(result?.value, payment)
+        verify { paymentPersistor.save(payment) }
+    }
+
+    @Test
+    fun shouldReturnSamePaymentAndErrorIfSQLException() {
+        val payment = Faker.payment()
+        val exception = SQLException("kaboom")
+        every { paymentPersistor.save(any()) } throws exception
+        inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
+        val result = outputTopic?.readValue()
+//        Assertions.assertArrayEquals(result?.errors, arrayOf(exception))
+//        Assertions.assertEquals(result?.value, payment)
         verify { paymentPersistor.save(payment) }
     }
 }

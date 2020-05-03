@@ -71,8 +71,7 @@ class ErrorHandlerProcessorTest {
     fun shouldLogAllErrors() {
         val payment = Faker.payment()
         val error = Faker.error()
-        val error2 = Faker.error().copy(Exception("kaboom2"))
-        inputTopic?.pipeInput(GenericTypeMessage(payment, arrayOf(error, error2)))
+        inputTopic?.pipeInput(GenericTypeMessage(payment, arrayOf(error, error)))
         verify {
             2
             logClient.logError(payment, any())

@@ -11,6 +11,6 @@ object Faker {
     }
 
     fun error(): Error {
-        return Error(Exception("kaboom"))
+        return Error("database","kaboom")
     }
 }

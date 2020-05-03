@@ -11,6 +11,7 @@ import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
 import java.util.*
+import com.wefox.kanekotic.centralizedPayments.models.Error
 
 
 class testDeserializer : Deserializer<GenericTypeMessage<Payment>> {
@@ -39,7 +40,8 @@ class testSerializer: Serializer<GenericTypeMessage<Payment>> {
 
     override fun serialize(topic: String, data: GenericTypeMessage<Payment>?): ByteArray {
         try {
-            return objectMapper.writeValueAsBytes(data)
+            val a =  objectMapper.writeValueAsBytes(data)
+            return a
         } catch (e: Exception) {
             throw SerializationException("Error serializing JSON message", e)
         }

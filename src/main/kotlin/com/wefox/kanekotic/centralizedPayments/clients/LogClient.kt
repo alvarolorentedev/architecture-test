@@ -8,15 +8,14 @@ import java.sql.SQLException
 
 object LogClient {
     fun logError(payment: Payment, error: Error) {
-        val typeError = if (error.exception is SQLException) "database" else "other"
         val httpAsync = "http://localhost:8997/log"
             .httpPost()
             .header("Content-Type", "application/json")
             .body(
                 """{
                 | 'payment_id': '${payment.payment_id}',
-                | 'error_type': '${typeError}',
-                | 'error_description': '${error.exception.message}'
+                | 'error_type': '${error.type}',
+                | 'error_description': '${error.message}'
                 |}""".trimMargin()
             )
             .responseString { _, _, result ->

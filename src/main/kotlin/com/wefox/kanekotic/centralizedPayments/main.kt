@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch
 fun main() {
     val props = streamsConfig
     val builder = StreamsBuilder()
-    val toggles = Toggles(offline = false, online = false)
+    val toggles = Toggles(offline = true, online = false)
     val paymentSerde = PaymentSerde.get()
 
     if (toggles.offline) {
@@ -35,10 +35,6 @@ fun main() {
     }
     val streams = KafkaStreams(builder.build(), props)
     val latch = CountDownLatch(1)
-
-    streams.setUncaughtExceptionHandler { _, e ->
-        println("uncaught")
-   }
 
     Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
         override fun run() {

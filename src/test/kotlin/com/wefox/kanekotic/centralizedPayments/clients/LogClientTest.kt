@@ -28,44 +28,7 @@ internal class LogClientTest {
 
     @Test
     fun shouldSendUnkownTypeOfExceptionAsOther() {
-        val exception = Exception("kaboom")
-        val payment = Faker.payment()
-
-        wiremock.stubFor(
-            WireMock.post("/log")
-            .withHeader("Content-Type", WireMock.equalTo("application/json"))
-            .withRequestBody(
-                WireMock.equalTo(
-                    """{
-                | 'payment_id': '${payment.payment_id}',
-                | 'error_type': 'other',
-                | 'error_description': '${exception.message}'
-                |}""".trimMargin()
-                )
-            )
-            .inScenario("Scenario")
-            .willReturn(WireMock.ok()))
-
-        LogClient.logError(payment, Error(exception))
-
-        wiremock.verify(
-            1,
-            WireMock.postRequestedFor(WireMock.urlEqualTo("/log"))
-                .withHeader("Content-Type", WireMock.equalTo("application/json"))
-                .withRequestBody(
-                    WireMock.equalTo(
-                        """{
-                | 'payment_id': '${payment.payment_id}',
-                | 'error_type': 'other',
-                | 'error_description': '${exception.message}'
-                |}""".trimMargin()
-                    )
-                ))
-    }
-
-    @Test
-    fun shouldSendSqlTypeOfExceptionAsdatabase() {
-        val exception = SQLException("kaboom sql")
+        val message = "kaboom"
         val payment = Faker.payment()
 
         wiremock.stubFor(
@@ -76,14 +39,14 @@ internal class LogClientTest {
                     """{
                 | 'payment_id': '${payment.payment_id}',
                 | 'error_type': 'database',
-                | 'error_description': '${exception.message}'
+                | 'error_description': '${message}'
                 |}""".trimMargin()
                 )
             )
             .inScenario("Scenario")
             .willReturn(WireMock.ok()))
 
-        LogClient.logError(payment, Error(exception))
+        LogClient.logError(payment, Error("database",message))
 
         wiremock.verify(
             1,
@@ -94,7 +57,7 @@ internal class LogClientTest {
                         """{
                 | 'payment_id': '${payment.payment_id}',
                 | 'error_type': 'database',
-                | 'error_description': '${exception.message}'
+                | 'error_description': '${message}'
                 |}""".trimMargin()
                     )
                 ))
