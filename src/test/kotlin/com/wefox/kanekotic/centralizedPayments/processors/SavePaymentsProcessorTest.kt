@@ -3,6 +3,7 @@ package com.wefox.kanekotic.centralizedPayments.processors
 import com.wefox.kanekotic.centralizedPayments.Faker
 import com.wefox.kanekotic.centralizedPayments.TestSerdes
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
+import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
@@ -82,14 +83,26 @@ class SavePaymentsProcessorTest {
     }
 
     @Test
+    fun shouldNotCallSaveInDatabaseIfExisitngError() {
+        val payment = Faker.payment()
+        inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, arrayOf(Error("database", "kaboom"))))
+        val result = outputTopic?.readValue()
+        Assertions.assertArrayEquals(result?.errors, arrayOf(Error("database", "kaboom")))
+        Assertions.assertEquals(result?.value, payment)
+        verify (exactly = 0) {
+            paymentPersistor.save(payment)
+        }
+    }
+
+    @Test
     fun shouldReturnSamePaymentAndErrorIfSQLException() {
         val payment = Faker.payment()
         val exception = SQLException("kaboom")
         every { paymentPersistor.save(any()) } throws exception
         inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
         val result = outputTopic?.readValue()
-//        Assertions.assertArrayEquals(result?.errors, arrayOf(exception))
-//        Assertions.assertEquals(result?.value, payment)
+        Assertions.assertArrayEquals(result?.errors, arrayOf(Error("database", exception.message!!)))
+        Assertions.assertEquals(result?.value, payment)
         verify { paymentPersistor.save(payment) }
     }
 }

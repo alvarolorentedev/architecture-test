@@ -1,5 +1,6 @@
 package com.wefox.kanekotic.centralizedPayments
 
+import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
@@ -21,18 +22,18 @@ fun main() {
     val builder = StreamsBuilder()
     val toggles = Toggles(offline = true, online = false)
     val paymentSerde = PaymentSerde.get()
+    val paymentPersistor = PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
 
     if (toggles.offline) {
-        val paymentPersistor = PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
         val stream = builder.stream(KafkaConfiguration.OFFLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
 
         SavePaymentProcessor(stream, paymentPersistor)
     }
 
     if (toggles.online) {
-        builder.stream(KafkaConfiguration.ONLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde)).peek { key, value ->
-            println("key = $key, value = $value")
-        }
+        val stream = builder.stream(KafkaConfiguration.ONLINE_INPUT_TOPIC, Consumed.with(Serdes.String(), paymentSerde.serde))
+        val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient)
+        SavePaymentProcessor(stream, paymentPersistor)
     }
     val streams = KafkaStreams(builder.build(), props)
     val latch = CountDownLatch(1)

@@ -10,7 +10,8 @@ import com.wefox.kanekotic.centralizedPayments.models.Error
 fun SavePaymentProcessor(source: KStream<String, GenericTypeMessage<Payment>>, paymentPersistor: PaymentPersistor): KStream<String, GenericTypeMessage<Payment>> {
     return source.mapValues { value ->
         try {
-            paymentPersistor.save(value.value)
+            if(value.errors.isEmpty())
+                paymentPersistor.save(value.value)
             value
         } catch (e: SQLException) {
             value.copy(errors = value.errors.plus(Error("database", e.message!!)))
