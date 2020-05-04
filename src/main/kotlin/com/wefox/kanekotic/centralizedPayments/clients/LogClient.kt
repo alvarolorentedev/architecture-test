@@ -2,13 +2,13 @@ package com.wefox.kanekotic.centralizedPayments.clients
 
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.Payment
-import java.sql.SQLException
 
-object LogClient {
+class LogClient(private val configuration: LogConfiguration) {
     fun logError(payment: Payment, error: Error) {
-        val httpAsync = "http://localhost:8997/log"
+        val httpAsync = "${configuration.url}/log"
             .httpPost()
             .header("Content-Type", "application/json")
             .body(

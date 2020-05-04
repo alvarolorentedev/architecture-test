@@ -2,11 +2,12 @@ package com.wefox.kanekotic.centralizedPayments.clients
 
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import com.wefox.kanekotic.centralizedPayments.configurations.paymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 
-object PaymentsClient {
+class PaymentsClient(private val configuration: paymentServiceConfiguration) {
     fun validatePayment(payment: Payment) {
-        val httpAsync = "http://localhost:8997/log"
+        val httpAsync = "${configuration.url}/log"
             .httpPost()
             .header("Content-Type", "application/json")
             .body(
