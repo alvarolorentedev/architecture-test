@@ -4,15 +4,23 @@ import com.wefox.kanekotic.centralizedPayments.Faker
 import com.wefox.kanekotic.centralizedPayments.models.Account
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
-import org.junit.jupiter.api.*
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.*
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.sql.Statement
+import java.sql.Timestamp
 import java.time.Instant
 import java.util.Date
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 
-class JsonClassDeserializerTest {
+class PaymentPersistorTest {
 
     private val H2_CONNECTION_STRING = "jdbc:h2:mem:test"
 
@@ -28,7 +36,7 @@ class JsonClassDeserializerTest {
         driver = DriverManager.getConnection(H2_CONNECTION_STRING)
         try {
             val statement: Statement = driver.createStatement()
-            val content = Files.readString(Paths.get("Database/schema.sql"),Charset.defaultCharset())
+            val content = Files.readString(Paths.get("Database/schema.sql"), Charset.defaultCharset())
             statement.executeUpdate(content)
             insertAccount(Account(1, "pepe", "pep@gmail.com", Date(), Timestamp(Instant.now().toEpochMilli())))
         } catch (ex: SQLException) {
@@ -79,7 +87,7 @@ class JsonClassDeserializerTest {
         statement.execute()
     }
 
-    fun getAccount(accountId: Int) : Account {
+    fun getAccount(accountId: Int): Account {
         val statement = driver.prepareStatement(SELECT_ACCOUNT_STATEMENT)
         statement.setInt(1, accountId)
         val result = statement.executeQuery()
@@ -91,7 +99,7 @@ class JsonClassDeserializerTest {
         return Account(accountId, name, email, birthdate, lastPayment)
     }
 
-    fun getPayment(paymentId: String) : Payment {
+    fun getPayment(paymentId: String): Payment {
         val statement = driver.prepareStatement(SELECT_PAYMENT_STATEMENT)
         statement.setString(1, paymentId)
         val result = statement.executeQuery()
@@ -102,6 +110,4 @@ class JsonClassDeserializerTest {
         val amount = result.getDouble("amount")
         return Payment(paymentId, accountId, paymentType, creditCard, amount, 10)
     }
-
-
 }

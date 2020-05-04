@@ -2,7 +2,6 @@ package com.wefox.kanekotic.centralizedPayments
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.wefox.kanekotic.centralizedPayments.models.Account
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.common.errors.SerializationException
@@ -10,9 +9,6 @@ import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
-import java.util.*
-import com.wefox.kanekotic.centralizedPayments.models.Error
-
 
 class testDeserializer : Deserializer<GenericTypeMessage<Payment>> {
     private val objectMapper = jacksonObjectMapper()
@@ -35,12 +31,12 @@ class testDeserializer : Deserializer<GenericTypeMessage<Payment>> {
     override fun close() {}
 }
 
-class testSerializer: Serializer<GenericTypeMessage<Payment>> {
+class testSerializer : Serializer<GenericTypeMessage<Payment>> {
     private val objectMapper = jacksonObjectMapper()
 
     override fun serialize(topic: String, data: GenericTypeMessage<Payment>?): ByteArray {
         try {
-            val a =  objectMapper.writeValueAsBytes(data)
+            val a = objectMapper.writeValueAsBytes(data)
             return a
         } catch (e: Exception) {
             throw SerializationException("Error serializing JSON message", e)
@@ -66,7 +62,7 @@ class TestSerdes private constructor() {
         serde = Serdes.serdeFrom(serializer, deserializer)
     }
 
-    companion object{
+    companion object {
         fun get(): TestSerdes {
             return TestSerdes()
         }

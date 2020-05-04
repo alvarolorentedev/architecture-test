@@ -5,20 +5,19 @@ import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
 import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
+import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
-import com.wefox.kanekotic.centralizedPayments.configurations.paymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.processors.ErrorHandlerProcessor
 import com.wefox.kanekotic.centralizedPayments.processors.SavePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.processors.ValidatePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
+import java.sql.DriverManager
+import java.util.concurrent.CountDownLatch
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
-import java.sql.DriverManager
-import java.util.concurrent.CountDownLatch
-
 
 class Main {
     companion object {
@@ -30,7 +29,7 @@ class Main {
                 PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
 
             if (ToggleConfiguration.offline) {
-                val stream = builder.stream(
+                builder.stream(
                     KafkaConfiguration.OFFLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
@@ -39,11 +38,11 @@ class Main {
             }
 
             if (ToggleConfiguration.online) {
-                val stream = builder.stream(
+                builder.stream(
                     KafkaConfiguration.ONLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
-                    .ValidatePaymentProcessor(PaymentsClient(paymentServiceConfiguration))
+                    .ValidatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
                     .SavePaymentProcessor(paymentPersistor)
                     .ErrorHandlerProcessor(LogClient(LogConfiguration))
             }

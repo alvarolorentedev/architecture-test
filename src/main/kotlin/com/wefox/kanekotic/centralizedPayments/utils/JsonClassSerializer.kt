@@ -5,7 +5,7 @@ import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Serializer
 
-class JsonClassSerializer<T>: Serializer<GenericTypeMessage<T>> {
+class JsonClassSerializer<T> : Serializer<GenericTypeMessage<T>> {
     private val objectMapper = jacksonObjectMapper()
 
     override fun serialize(topic: String, data: GenericTypeMessage<T>?): ByteArray {
@@ -18,5 +18,3 @@ class JsonClassSerializer<T>: Serializer<GenericTypeMessage<T>> {
 
     override fun close() {}
 }
-
-

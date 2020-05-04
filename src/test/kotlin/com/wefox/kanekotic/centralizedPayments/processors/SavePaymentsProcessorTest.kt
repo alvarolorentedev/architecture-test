@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
+import java.sql.SQLException
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -19,13 +20,12 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.TestInputTopic
 import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
-import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.sql.SQLException
 
 class SavePaymentsProcessorTest {
     private var testDriver: TopologyTestDriver? = null
@@ -35,7 +35,6 @@ class SavePaymentsProcessorTest {
     @MockK
     private lateinit var paymentPersistor: PaymentPersistor
 
-
     @BeforeEach
     fun setup() {
         val builder = StreamsBuilder()
@@ -44,9 +43,8 @@ class SavePaymentsProcessorTest {
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
         paymentPersistor = mockk(relaxed = true)
 
-        val source =
-            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
-                .SavePaymentProcessor(paymentPersistor).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
+        builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
+            .SavePaymentProcessor(paymentPersistor).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
@@ -70,7 +68,6 @@ class SavePaymentsProcessorTest {
         }
     }
 
-
     @Test
     fun shouldCallSavePaymentAndReturnSamePaymentWithoutExceptions() {
         val payment = Faker.payment()
@@ -88,7 +85,7 @@ class SavePaymentsProcessorTest {
         val result = outputTopic?.readValue()
         Assertions.assertArrayEquals(result?.errors, arrayOf(Error("database", "kaboom")))
         Assertions.assertEquals(result?.value, payment)
-        verify (exactly = 0) {
+        verify(exactly = 0) {
             paymentPersistor.save(payment)
         }
     }

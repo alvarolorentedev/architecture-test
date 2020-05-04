@@ -34,7 +34,6 @@ internal class ValidatePaymentProcessorTest {
     @MockK
     private lateinit var paymentsClient: PaymentsClient
 
-
     @BeforeEach
     fun setup() {
         val builder = StreamsBuilder()
@@ -44,9 +43,8 @@ internal class ValidatePaymentProcessorTest {
 
         paymentsClient = mockk(relaxed = true)
 
-        val source =
-            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
-                .ValidatePaymentProcessor(paymentsClient).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
+        builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
+            .ValidatePaymentProcessor(paymentsClient).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
@@ -69,7 +67,6 @@ internal class ValidatePaymentProcessorTest {
             println("Ignoring exception, test failing in Windows due this exception:" + e.localizedMessage)
         }
     }
-
 
     @Test
     fun shouldCallSavePaymentAndReturnSamePaymentWithoutExceptions() {
