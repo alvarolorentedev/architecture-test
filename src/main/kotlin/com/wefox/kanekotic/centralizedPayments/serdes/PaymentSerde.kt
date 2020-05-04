@@ -11,8 +11,8 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
 
 class PaymentSerde private constructor() {
-    val serializer: Serializer<GenericTypeMessage<Payment>>
-    val deserializer: Deserializer<GenericTypeMessage<Payment>>
+    private val serializer: Serializer<GenericTypeMessage<Payment>>
+    private val deserializer: Deserializer<GenericTypeMessage<Payment>>
     val serde: Serde<GenericTypeMessage<Payment>>
 
     init {

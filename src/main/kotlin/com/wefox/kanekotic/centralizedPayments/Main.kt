@@ -8,9 +8,9 @@ import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
-import com.wefox.kanekotic.centralizedPayments.processors.ErrorHandlerProcessor
-import com.wefox.kanekotic.centralizedPayments.processors.SavePaymentProcessor
-import com.wefox.kanekotic.centralizedPayments.processors.ValidatePaymentProcessor
+import com.wefox.kanekotic.centralizedPayments.processors.errorHandlerProcessor
+import com.wefox.kanekotic.centralizedPayments.processors.savePaymentProcessor
+import com.wefox.kanekotic.centralizedPayments.processors.validatePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
 import java.sql.DriverManager
 import java.util.concurrent.CountDownLatch
@@ -33,8 +33,8 @@ class Main {
                     KafkaConfiguration.OFFLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
-                    .SavePaymentProcessor(paymentPersistor)
-                    .ErrorHandlerProcessor(LogClient(LogConfiguration))
+                    .savePaymentProcessor(paymentPersistor)
+                    .errorHandlerProcessor(LogClient(LogConfiguration))
             }
 
             if (ToggleConfiguration.online) {
@@ -42,9 +42,9 @@ class Main {
                     KafkaConfiguration.ONLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
-                    .ValidatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
-                    .SavePaymentProcessor(paymentPersistor)
-                    .ErrorHandlerProcessor(LogClient(LogConfiguration))
+                    .validatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
+                    .savePaymentProcessor(paymentPersistor)
+                    .errorHandlerProcessor(LogClient(LogConfiguration))
             }
             val streams = KafkaStreams(builder.build(), props)
             val latch = CountDownLatch(1)

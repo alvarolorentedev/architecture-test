@@ -6,7 +6,7 @@ import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.streams.kstream.KStream
 
-fun KStream<String, GenericTypeMessage<Payment>>.ErrorHandlerProcessor(
+fun KStream<String, GenericTypeMessage<Payment>>.errorHandlerProcessor(
     logClient: LogClient
 ): KStream<String, GenericTypeMessage<Payment>> {
     return this.peek { _, value ->

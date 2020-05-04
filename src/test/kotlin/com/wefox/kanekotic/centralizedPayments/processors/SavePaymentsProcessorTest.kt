@@ -44,7 +44,7 @@ class SavePaymentsProcessorTest {
         paymentPersistor = mockk(relaxed = true)
 
         builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
-            .SavePaymentProcessor(paymentPersistor).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
+            .savePaymentProcessor(paymentPersistor).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
