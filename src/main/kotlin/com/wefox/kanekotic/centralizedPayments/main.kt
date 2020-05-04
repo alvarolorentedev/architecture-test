@@ -1,11 +1,14 @@
 package com.wefox.kanekotic.centralizedPayments
 
+import com.wefox.kanekotic.centralizedPayments.clients.LogClient
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
-import com.wefox.kanekotic.centralizedPayments.models.Toggles
+import com.wefox.kanekotic.centralizedPayments.configurations.paymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
+import com.wefox.kanekotic.centralizedPayments.processors.ErrorHandlerProcessor
 import com.wefox.kanekotic.centralizedPayments.processors.SavePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.processors.ValidatePaymentProcessor
 import com.wefox.kanekotic.centralizedPayments.serdes.PaymentSerde
@@ -33,6 +36,7 @@ class Main {
                 ).peek{ _, value -> println(value) }
 
                 SavePaymentProcessor(stream, paymentPersistor)
+                ErrorHandlerProcessor(stream, LogClient(LogConfiguration))
             }
 
             if (ToggleConfiguration.online) {
@@ -40,7 +44,7 @@ class Main {
                     KafkaConfiguration.ONLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
-                val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient)
+                val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient(paymentServiceConfiguration))
                 SavePaymentProcessor(validatePaymentProcessor, paymentPersistor)
             }
             val streams = KafkaStreams(builder.build(), props)
