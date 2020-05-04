@@ -1,4 +1,4 @@
-version: '2'
+version: '3.0'
 
 networks:
   kafka-net:
@@ -59,6 +59,7 @@ services:
       context: .
       dockerfile: Dockerfile
     network_mode: host
+    command: ["./wait-for-it.sh", "postgress:5432","kafka-server:9092","-t","100", "--", "java", "-Dconfig.env=localOsX", "-jar", "app.jar"]
     depends_on:
-      - api-producer
       - postgress
+      - kafka-server
