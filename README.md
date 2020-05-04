@@ -12,7 +12,11 @@ docker-compose -f docker-compose.mac.yml up
 
 ### :memo: Notes
 
-_Some notes or explaination of your solution..._
+Decision record:
+- [Development Principles](docs/development_principles.md)
+- [Language Selection](docs/language.md)
+- [Frameworks Selection](docs/frameworks.md)
+- [Libraries Selection](docs/libraries.md)
 
 ### :pushpin: Things to improve
 
@@ -23,11 +27,17 @@ Architecture level:
 - [ ] add metrics (ex. use logstash with grafana for logs)
 - [ ] add test data management in platform (ex. add new field to payment contract and request headers 'test-mode')
 - [ ] add traceability data management in platform (ex. add new field to payment contract and request headers 'correlation-id')
+- [ ] have secret management in place
+- [ ] Manage infrastructure with terraform and kubernetes
 
 Project level:
 - [x] Use configuration file by environment
 - [x] add linter
+- [ ] deploy to cloud using CI
+- [ ] use version from CI when building docker on CI
+- [ ] store secrets not on configuration files
 - [ ] Add integration test
+- [ ] Add IoC
 - [ ] Handle unhandle exceptions
 - [ ] Handle deserialization errors
 - [ ] Handle pre deserialization errors
