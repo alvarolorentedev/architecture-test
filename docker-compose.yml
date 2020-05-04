@@ -60,6 +60,7 @@ services:
       dockerfile: Dockerfile
     networks:
       - kafka-net
+    command: ["./wait-for-it.sh", "postgress:5432","kafka-server:9092","-t","100", "--", "java", "-Dconfig.env=local", "-jar", "app.jar"]
     depends_on:
-      - api-producer
       - postgress
+      - kafka-server
