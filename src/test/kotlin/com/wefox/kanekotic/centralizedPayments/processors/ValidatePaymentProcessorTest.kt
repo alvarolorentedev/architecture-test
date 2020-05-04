@@ -3,6 +3,7 @@ package com.wefox.kanekotic.centralizedPayments.processors
 import com.wefox.kanekotic.centralizedPayments.Faker
 import com.wefox.kanekotic.centralizedPayments.TestSerdes
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
+import com.wefox.kanekotic.centralizedPayments.clients.PaymentsResponseException
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
@@ -81,7 +82,7 @@ internal class ValidatePaymentProcessorTest {
     @Test
     fun shouldReturnSamePaymentAndErrorIfException() {
         val payment = Faker.payment()
-        val exception = Exception("kaboom")
+        val exception = PaymentsResponseException(Exception("kaboom"))
         every { paymentsClient.validatePayment(payment) } throws exception
         inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
         val result = outputTopic?.readValue()

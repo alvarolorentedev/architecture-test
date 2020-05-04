@@ -5,6 +5,8 @@ import com.github.kittinunf.result.Result
 import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 
+class PaymentsResponseException(cause: Throwable?) : Exception(cause)
+
 class PaymentsClient(private val configuration: PaymentServiceConfiguration) {
     fun validatePayment(payment: Payment) {
         val httpAsync = "${configuration.url}/log"
@@ -22,12 +24,7 @@ class PaymentsClient(private val configuration: PaymentServiceConfiguration) {
             .responseString { _, _, result ->
                 when (result) {
                     is Result.Failure -> {
-                        val ex = result.getException()
-                        println(ex)
-                    }
-                    is Result.Success -> {
-                        val data = result.get()
-                        println(data)
+                        throw PaymentsResponseException(result.getException())
                     }
                 }
             }

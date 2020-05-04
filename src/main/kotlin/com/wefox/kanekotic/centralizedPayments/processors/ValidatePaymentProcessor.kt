@@ -1,6 +1,7 @@
 package com.wefox.kanekotic.centralizedPayments.processors
 
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
+import com.wefox.kanekotic.centralizedPayments.clients.PaymentsResponseException
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
@@ -11,7 +12,7 @@ fun KStream<String, GenericTypeMessage<Payment>>.ValidatePaymentProcessor(paymen
         try {
             paymentClient.validatePayment(value.value)
             value
-        } catch (e: Exception) {
+        } catch (e: PaymentsResponseException) {
             value.copy(errors = value.errors.plus(Error("network", e.message!!)))
         }
     }
