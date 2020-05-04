@@ -18,7 +18,7 @@ curl localhost:9000/start
 ### :memo: Notes
 
 Decision record:
-- [Development Principles](docs/development_principles.md)
+- [Development Practices](docs/development_practices.md)
 - [Language Selection](docs/language.md)
 - [Frameworks Selection](docs/frameworks.md)
 - [Libraries Selection](docs/libraries.md)
@@ -39,8 +39,7 @@ Architecture level:
 Project level:
 - [x] Use configuration file by environment
 - [x] add linter
-- [ ] deploy to cloud using CI
-- [ ] use version from CI when building docker on CI
+- [x] deploy to cloud using CI
 - [ ] store secrets not on configuration files
 - [ ] Add integration test
 - [ ] Add IoC
@@ -50,3 +49,5 @@ Project level:
 - [ ] Make transactional adding to the database
 - [ ] add retry for non 400 in clients
 - [ ] use lenses library to improve mutation
+- [ ] use version from CI when building docker on CI
+- [ ] add flyway for database schema evolution
