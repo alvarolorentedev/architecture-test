@@ -10,6 +10,11 @@ in osx
 docker-compose -f docker-compose.mac.yml up
 ```
 
+start the process by sending curl to generate messages and clean postgress
+```bash 
+curl localhost:9000/start
+```
+
 ### :memo: Notes
 
 Decision record:
