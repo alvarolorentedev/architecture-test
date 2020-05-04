@@ -29,6 +29,7 @@ Architecture level:
 - [ ] add traceability data management in platform (ex. add new field to payment contract and request headers 'correlation-id')
 - [ ] have secret management in place
 - [ ] Manage infrastructure with terraform and kubernetes
+- [ ] Feature toggles as a service
 
 Project level:
 - [x] Use configuration file by environment
