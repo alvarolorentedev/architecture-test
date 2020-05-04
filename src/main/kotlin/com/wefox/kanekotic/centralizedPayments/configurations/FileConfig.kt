@@ -5,7 +5,6 @@ import com.uchuhimo.konf.ConfigSpec
 import com.uchuhimo.konf.Feature
 import com.uchuhimo.konf.source.hocon
 
-
 object postgress : ConfigSpec() {
     val connectionString by required<String>()
 }
@@ -46,5 +45,4 @@ object FileConfig {
         .enable(Feature.OPTIONAL_SOURCE_BY_DEFAULT)
         .from.hocon.resource("application.conf")
         .from.hocon.resource("${System.getProperty("config.env")}.conf")
-
 }

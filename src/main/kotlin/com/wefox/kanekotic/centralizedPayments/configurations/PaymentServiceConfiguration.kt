@@ -1,6 +1,5 @@
 package com.wefox.kanekotic.centralizedPayments.configurations
 
-object paymentServiceConfiguration {
+object PaymentServiceConfiguration {
     val url = FileConfig.config[payments.url]
-
 }

@@ -7,14 +7,12 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
-import java.util.*
 
 class JsonClassDeserializerTest {
 
     data class Example(val text: String)
 
     private lateinit var subject: Deserializer<GenericTypeMessage<Example>>
-
 
     @BeforeEach
     fun setup() {
@@ -29,7 +27,7 @@ class JsonClassDeserializerTest {
         try {
             subject.deserialize("", "".toByteArray())
             fail("Should not be here")
-        } catch (e: SerializationException){
+        } catch (e: SerializationException) {
         }
     }
 
@@ -38,7 +36,7 @@ class JsonClassDeserializerTest {
         try {
             subject.deserialize("", "{ \"text2\": \"pepe\" }".toByteArray())
             fail("Should not be here")
-        } catch (e: SerializationException){
+        } catch (e: SerializationException) {
         }
     }
 

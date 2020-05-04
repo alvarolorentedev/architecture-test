@@ -26,7 +26,7 @@ Architecture level:
 
 Project level:
 - [x] Use configuration file by environment
-- [ ] add linter
+- [x] add linter
 - [ ] Add integration test
 - [ ] Handle unhandle exceptions
 - [ ] Handle deserialization errors

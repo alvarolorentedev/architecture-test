@@ -30,7 +30,6 @@ class ErrorHandlerProcessorTest {
     @MockK
     private lateinit var logClient: LogClient
 
-
     @BeforeEach
     fun setup() {
         val builder = StreamsBuilder()
@@ -39,8 +38,7 @@ class ErrorHandlerProcessorTest {
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
         logClient = mockk(relaxed = true)
 
-        val source =
-            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde)).ErrorHandlerProcessor(logClient).to("test-output")
+        builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde)).ErrorHandlerProcessor(logClient).to("test-output")
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
@@ -64,14 +62,12 @@ class ErrorHandlerProcessorTest {
         }
     }
 
-
     @Test
     fun shouldLogAllErrors() {
         val payment = Faker.payment()
         val error = Faker.error()
         inputTopic?.pipeInput(GenericTypeMessage(payment, arrayOf(error, error)))
-        verify {
-            2
+        verify(exactly = 2) {
             logClient.logError(payment, any())
         }
     }

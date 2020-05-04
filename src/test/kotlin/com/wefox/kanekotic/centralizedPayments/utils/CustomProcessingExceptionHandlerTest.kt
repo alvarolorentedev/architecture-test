@@ -6,9 +6,7 @@ import org.apache.kafka.streams.errors.ProductionExceptionHandler
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-
 class CustomProcessingExceptionHandlerTest {
-
 
     @Test
     fun shouldHandleExceptionAndLogError() {
@@ -16,7 +14,5 @@ class CustomProcessingExceptionHandlerTest {
         val record = mockk<ProducerRecord<ByteArray, ByteArray>>(relaxed = true)
         val result = CustomProcessingExceptionHandler().handle(record, exception)
         Assertions.assertEquals(ProductionExceptionHandler.ProductionExceptionHandlerResponse.CONTINUE, result)
-
     }
-
 }

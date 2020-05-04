@@ -21,5 +21,4 @@ class PaymentPersistor(private val connection: Connection) {
         val update = connection.createStatement()
         update.execute(UPDATE_ACCOUNT_STATEMENT)
     }
-
 }

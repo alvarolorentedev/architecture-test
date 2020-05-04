@@ -12,7 +12,6 @@ class JsonClassSerializerTest {
 
     private lateinit var subject: Serializer<GenericTypeMessage<Example>>
 
-
     @BeforeEach
     fun setup() {
         subject = JsonClassSerializer()
@@ -23,5 +22,4 @@ class JsonClassSerializerTest {
         val result = subject.serialize("", GenericTypeMessage(Example("pepe"), emptyArray()))
         Assertions.assertNotNull(result)
     }
-
 }

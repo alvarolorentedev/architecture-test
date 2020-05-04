@@ -4,11 +4,11 @@ import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.utils.JsonClassDeserializer
 import com.wefox.kanekotic.centralizedPayments.utils.JsonClassSerializer
+import java.util.HashMap
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
-import java.util.HashMap
 
 class PaymentSerde private constructor() {
     val serializer: Serializer<GenericTypeMessage<Payment>>
@@ -26,10 +26,9 @@ class PaymentSerde private constructor() {
         serde = Serdes.serdeFrom(serializer, deserializer)
     }
 
-    companion object{
+    companion object {
         fun get(): PaymentSerde {
             return PaymentSerde()
         }
     }
 }
-

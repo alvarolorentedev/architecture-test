@@ -1,15 +1,13 @@
 package com.wefox.kanekotic.centralizedPayments.configurations
 
 import com.wefox.kanekotic.centralizedPayments.utils.CustomProcessingExceptionHandler
+import java.util.Properties
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.streams.StreamsConfig
-import java.util.*
-
 
 object KafkaConfiguration {
     val OFFLINE_INPUT_TOPIC = FileConfig.config[kafka.topics.offline]
     val ONLINE_INPUT_TOPIC = FileConfig.config[kafka.topics.online]
-
 
     val streamsConfig: Properties
         get() {
@@ -22,4 +20,3 @@ object KafkaConfiguration {
             return props
         }
 }
-
