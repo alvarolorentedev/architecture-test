@@ -33,10 +33,9 @@ class Main {
                 val stream = builder.stream(
                     KafkaConfiguration.OFFLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
-                ).peek{ _, value -> println(value) }
-
-                SavePaymentProcessor(stream, paymentPersistor)
-                ErrorHandlerProcessor(stream, LogClient(LogConfiguration))
+                )
+                    .SavePaymentProcessor(paymentPersistor)
+                    .ErrorHandlerProcessor(LogClient(LogConfiguration))
             }
 
             if (ToggleConfiguration.online) {
@@ -44,8 +43,9 @@ class Main {
                     KafkaConfiguration.ONLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
-                val validatePaymentProcessor = ValidatePaymentProcessor(stream, PaymentsClient(paymentServiceConfiguration))
-                SavePaymentProcessor(validatePaymentProcessor, paymentPersistor)
+                    .ValidatePaymentProcessor(PaymentsClient(paymentServiceConfiguration))
+                    .SavePaymentProcessor(paymentPersistor)
+                    .ErrorHandlerProcessor(LogClient(LogConfiguration))
             }
             val streams = KafkaStreams(builder.build(), props)
             val latch = CountDownLatch(1)

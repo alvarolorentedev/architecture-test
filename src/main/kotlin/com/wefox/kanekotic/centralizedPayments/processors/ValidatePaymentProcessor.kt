@@ -6,8 +6,8 @@ import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.streams.kstream.KStream
 
-fun ValidatePaymentProcessor(source: KStream<String, GenericTypeMessage<Payment>>, paymentClient: PaymentsClient): KStream<String, GenericTypeMessage<Payment>> {
-    return source.mapValues { value ->
+fun KStream<String, GenericTypeMessage<Payment>>.ValidatePaymentProcessor(paymentClient: PaymentsClient): KStream<String, GenericTypeMessage<Payment>> {
+    return this.mapValues { value ->
         try {
             paymentClient.validatePayment(value.value)
             value
