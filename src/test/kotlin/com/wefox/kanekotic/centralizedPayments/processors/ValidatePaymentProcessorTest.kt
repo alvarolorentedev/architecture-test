@@ -42,11 +42,11 @@ internal class ValidatePaymentProcessorTest {
 
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
 
+        paymentsClient = mockk(relaxed = true)
+
         val source =
             builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
-
-        paymentsClient = mockk(relaxed = true)
-        ValidatePaymentProcessor(source, paymentsClient).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
+                .ValidatePaymentProcessor(paymentsClient).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(

@@ -7,8 +7,8 @@ import org.apache.kafka.streams.kstream.KStream
 import java.sql.SQLException
 import com.wefox.kanekotic.centralizedPayments.models.Error
 
-fun SavePaymentProcessor(source: KStream<String, GenericTypeMessage<Payment>>, paymentPersistor: PaymentPersistor): KStream<String, GenericTypeMessage<Payment>> {
-    return source.mapValues { value ->
+fun KStream<String, GenericTypeMessage<Payment>>.SavePaymentProcessor(paymentPersistor: PaymentPersistor): KStream<String, GenericTypeMessage<Payment>> {
+    return this.mapValues { value ->
         try {
             if(value.errors.isEmpty())
                 paymentPersistor.save(value.value)

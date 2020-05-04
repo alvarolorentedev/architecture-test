@@ -37,12 +37,10 @@ class ErrorHandlerProcessorTest {
         val testSerdes = TestSerdes.get()
 
         MockKAnnotations.init(this, relaxUnitFun = true, relaxed = true)
+        logClient = mockk(relaxed = true)
 
         val source =
-            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
-
-        logClient = mockk(relaxed = true)
-        ErrorHandlerProcessor(source, logClient).to("test-output")
+            builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde)).ErrorHandlerProcessor(logClient).to("test-output")
 
         testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
         inputTopic = testDriver?.createInputTopic(
