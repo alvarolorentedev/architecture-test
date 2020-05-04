@@ -6,6 +6,9 @@ import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 
+
+class LogResponseException(cause: Throwable?) : Exception(cause)
+
 class LogClient(private val configuration: LogConfiguration) {
     fun logError(payment: Payment, error: Error) {
         val httpAsync = "${configuration.url}/log"
@@ -21,12 +24,7 @@ class LogClient(private val configuration: LogConfiguration) {
             .responseString { _, _, result ->
                 when (result) {
                     is Result.Failure -> {
-                        val ex = result.getException()
-                        println(ex)
-                    }
-                    is Result.Success -> {
-                        val data = result.get()
-                        println(data)
+                        throw LogResponseException(result.getException())
                     }
                 }
             }
