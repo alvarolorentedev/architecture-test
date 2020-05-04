@@ -1,45 +1,37 @@
 package com.wefox.kanekotic.centralizedPayments.configurations
 
-import com.natpryce.konfig.*
+import com.uchuhimo.konf.Config
+import com.uchuhimo.konf.ConfigSpec
+import com.uchuhimo.konf.source.hocon
+
+
+object postgress : ConfigSpec() {
+    val connectionString by required<String>()
+}
+
+object kafka : ConfigSpec() {
+    object topics : ConfigSpec() {
+        val online by required<String>()
+        val offline by required<String>()
+    }
+
+    val serverUrl by required<String>()
+    val applicationId by required<String>()
+    val offsetReset by required<String>()
+    val cacheSize by required<Int>()
+}
+
+object toggles : ConfigSpec() {
+    val online by required<Boolean>()
+    val offline by required<Boolean>()
+}
+
+
 
 object FileConfig {
-    val postgressConnectionString = Key(
-        "postgress.connection-string",
-        stringType
-    )
-    val kafkaUrl = Key(
-        "kafka.server-url",
-        stringType
-    )
-    val kafkaOnlineTopic = Key(
-        "kafka.input-topics.online",
-        stringType
-    )
-    val kafkaOfflineTopic = Key(
-        "kafka.input-topics.offline",
-        stringType
-    )
-    val kafkaApplicationId = Key(
-        "kafka.application-id",
-        stringType
-    )
-    val cacheSize =
-        Key("kafka.cache-size", intType)
-    val offsetReset = Key(
-        "kafka.offset-reset",
-        stringType
-    )
-    val offlineToggle = Key(
-        "toggles.offline",
-        booleanType
-    )
-    val onlineToggle = Key(
-        "toggles.online",
-        booleanType
-    )
-
-    val config = EnvironmentVariables() overriding
-            ConfigurationProperties.fromResource("application.conf")
-
-
+    val config = Config {
+            addSpec(postgress)
+            addSpec(kafka)
+            addSpec(toggles)
+    }.from.hocon.resource("${System.getProperty("config.env")}.conf")
 }
