@@ -7,17 +7,17 @@ import java.util.*
 
 
 object KafkaConfiguration {
-    const val OFFLINE_INPUT_TOPIC = "offline"
-    const val ONLINE_INPUT_TOPIC = "online"
+    val OFFLINE_INPUT_TOPIC = FileConfig.config[FileConfig.kafkaOfflineTopic]
+    val ONLINE_INPUT_TOPIC = FileConfig.config[FileConfig.kafkaOnlineTopic]
 
 
     val streamsConfig: Properties
         get() {
             val props = Properties()
-            props[StreamsConfig.APPLICATION_ID_CONFIG] = "streams-centralized-payments"
-            props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:29092"
-            props[StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG] = 0
-            props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
+            props[StreamsConfig.APPLICATION_ID_CONFIG] = FileConfig.config[FileConfig.kafkaApplicationId]
+            props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = FileConfig.config[FileConfig.kafkaUrl]
+            props[StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG] = FileConfig.config[FileConfig.cacheSize]
+            props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = FileConfig.config[FileConfig.offsetReset]
             props[StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG] = CustomProcessingExceptionHandler::class.java
             return props
         }

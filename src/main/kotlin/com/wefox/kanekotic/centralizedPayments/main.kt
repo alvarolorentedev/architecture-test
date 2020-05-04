@@ -16,17 +16,17 @@ import org.apache.kafka.streams.kstream.Consumed
 import java.sql.DriverManager
 import java.util.concurrent.CountDownLatch
 
+
 class Main {
     companion object {
         @JvmStatic fun main(args: Array<String>) {
             val props = streamsConfig
             val builder = StreamsBuilder()
-            val toggles = Toggles(offline = true, online = false)
             val paymentSerde = PaymentSerde.get()
             val paymentPersistor =
                 PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
 
-            if (toggles.offline) {
+            if (ToggleConfiguration.offline) {
                 val stream = builder.stream(
                     KafkaConfiguration.OFFLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
@@ -35,7 +35,7 @@ class Main {
                 SavePaymentProcessor(stream, paymentPersistor)
             }
 
-            if (toggles.online) {
+            if (ToggleConfiguration.online) {
                 val stream = builder.stream(
                     KafkaConfiguration.ONLINE_INPUT_TOPIC,
                     Consumed.with(Serdes.String(), paymentSerde.serde)
