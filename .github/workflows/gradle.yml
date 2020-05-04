@@ -21,3 +21,24 @@ jobs:
       run: ./gradlew check
     - name: Run Tests
       run: ./gradlew test
+    - name: Deploy login
+      uses: "actions/heroku@master"
+      with:
+        args: "container:login"
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP: ${{ secrets.HEROKU_APP }}
+    - name: Deploy push
+      uses: "actions/heroku@master"
+      with:
+        args: "container:push web"
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP: ${{ secrets.HEROKU_APP }}
+    - name: Deploy release
+      uses: "actions/heroku@master"
+      with:
+        args: "container:release web"
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP: ${{ secrets.HEROKU_APP }}
