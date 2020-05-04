@@ -5,7 +5,6 @@ import com.wefox.kanekotic.centralizedPayments.TestSerdes
 import com.wefox.kanekotic.centralizedPayments.clients.LogClient
 import com.wefox.kanekotic.centralizedPayments.clients.LogResponseException
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
-import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import io.mockk.MockKAnnotations
@@ -22,10 +21,8 @@ import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.kstream.Consumed
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.sql.SQLException
 
 class ErrorHandlerProcessorTest {
     private var testDriver: TopologyTestDriver? = null
@@ -76,7 +73,6 @@ class ErrorHandlerProcessorTest {
             logClient.logError(payment, any())
         }
     }
-
 
     @Test
     fun shouldlogAndErrorIfException() {

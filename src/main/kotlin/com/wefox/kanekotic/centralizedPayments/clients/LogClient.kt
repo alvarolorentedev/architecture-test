@@ -6,7 +6,6 @@ import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 
-
 class LogResponseException(cause: Throwable?) : Exception(cause)
 
 class LogClient(private val configuration: LogConfiguration) {

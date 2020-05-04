@@ -12,11 +12,11 @@ fun KStream<String, GenericTypeMessage<Payment>>.ErrorHandlerProcessor(
     return this.peek { _, value ->
         try {
             value.errors.forEach {
-                    error -> logClient.logError(value.value, error)
+                error ->
+                logClient.logError(value.value, error)
             }
         } catch (e: LogResponseException) {
             println(e)
         }
-
     }
 }
