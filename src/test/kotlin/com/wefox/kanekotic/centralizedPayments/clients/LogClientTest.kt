@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.wefox.kanekotic.centralizedPayments.Faker
 import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
+import com.wefox.kanekotic.centralizedPayments.models.ErrorType
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
@@ -44,7 +45,7 @@ internal class LogClientTest {
                     WireMock.equalTo(
                         """{
                 | 'payment_id': '${payment.payment_id}',
-                | 'error_type': 'database',
+                | 'error_type': 'network',
                 | 'error_description': '$message'
                 |}""".trimMargin()
                     )
@@ -53,7 +54,7 @@ internal class LogClientTest {
                 .willReturn(WireMock.ok())
         )
 
-        LogClient.logError(payment, Error("database", message))
+        LogClient.logError(payment, Error(ErrorType.network, message))
 
         wiremock.verify(
             1,
@@ -63,7 +64,7 @@ internal class LogClientTest {
                     WireMock.equalTo(
                         """{
                 | 'payment_id': '${payment.payment_id}',
-                | 'error_type': 'database',
+                | 'error_type': 'network',
                 | 'error_description': '$message'
                 |}""".trimMargin()
                     )

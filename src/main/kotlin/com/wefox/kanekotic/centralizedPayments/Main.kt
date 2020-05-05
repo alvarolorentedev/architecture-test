@@ -7,6 +7,9 @@ import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
+import com.wefox.kanekotic.centralizedPayments.models.Error
+import com.wefox.kanekotic.centralizedPayments.models.ErrorType
+import com.wefox.kanekotic.centralizedPayments.models.Payment
 import com.wefox.kanekotic.centralizedPayments.persistors.PaymentPersistor
 import com.wefox.kanekotic.centralizedPayments.processors.errorHandlerProcessor
 import com.wefox.kanekotic.centralizedPayments.processors.savePaymentProcessor
@@ -25,6 +28,7 @@ class Main {
             val props = streamsConfig
             val builder = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
+            val logClient = LogClient(LogConfiguration)
             val paymentPersistor =
                 PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.getConnectionString()))
 
@@ -34,7 +38,7 @@ class Main {
                     Consumed.with(Serdes.String(), paymentSerde.serde)
                 )
                     .savePaymentProcessor(paymentPersistor)
-                    .errorHandlerProcessor(LogClient(LogConfiguration))
+                    .errorHandlerProcessor(logClient)
             }
 
             if (ToggleConfiguration.online) {
@@ -44,10 +48,16 @@ class Main {
                 )
                     .validatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
                     .savePaymentProcessor(paymentPersistor)
-                    .errorHandlerProcessor(LogClient(LogConfiguration))
+                    .errorHandlerProcessor(logClient)
             }
+
             val streams = KafkaStreams(builder.build(), props)
             val latch = CountDownLatch(1)
+
+            streams.setUncaughtExceptionHandler { _, e ->
+                logClient.logError(Payment("00000", 0,"online", "00000", 0.0, 0), Error(ErrorType.other, e.message!!) )
+                System.exit(1)
+            }
 
             Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
                 override fun run() {

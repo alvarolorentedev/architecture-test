@@ -53,17 +53,17 @@ Architecture level:
 
 
 Project level:
-- [x] Use configuration file by environment
-- [x] add linter
-- [x] deploy to cloud using CI
-- [x] have encrypted secrets
-- [ ] Add integration test
-- [ ] Add IoC
-- [ ] Handle unhandle exceptions
-- [ ] Handle deserialization errors
-- [ ] Handle pre deserialization errors
-- [ ] Make transactional adding to the database
-- [ ] add retry for non 400 in clients
-- [ ] use lenses library to improve mutation
-- [ ] use version from CI when building docker on CI
-- [ ] add flyway for database schema evolution
+- [x] Use configuration file by environment (important)
+- [x] add linter (nice to have)
+- [x] deploy to cloud using CI (important)
+- [x] have encrypted secrets (important)
+- [x] Handle unhandle exceptions (important)
+- [ ] add retry for non 400 in clients (important)
+- [ ] Add integration test (important)
+- [ ] Make transactional adding to the database (important)
+- [ ] Add IoC (nice to have)
+- [ ] Handle deserialization errors (nice to have)
+- [ ] Handle pre deserialization errors (nice to have)
+- [ ] use lenses library to improve mutation (nice to have)
+- [ ] use version from CI when building docker on CI (nice to have)
+- [ ] add flyway for database schema evolution (nice to have)

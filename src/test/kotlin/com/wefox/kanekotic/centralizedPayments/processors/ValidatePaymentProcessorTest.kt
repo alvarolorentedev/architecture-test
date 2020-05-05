@@ -6,6 +6,7 @@ import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsResponseException
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
+import com.wefox.kanekotic.centralizedPayments.models.ErrorType
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import io.mockk.MockKAnnotations
@@ -86,7 +87,7 @@ internal class ValidatePaymentProcessorTest {
         every { paymentsClient.validatePayment(payment) } throws exception
         inputTopic?.pipeInput("pepe", GenericTypeMessage(payment, emptyArray()))
         val result = outputTopic?.readValue()
-        Assertions.assertArrayEquals(result?.errors, arrayOf(Error("network", exception.message!!)))
+        Assertions.assertArrayEquals(result?.errors, arrayOf(Error(ErrorType.network, exception.message!!)))
         Assertions.assertEquals(result?.value, payment)
         verify { paymentsClient.validatePayment(payment) }
     }

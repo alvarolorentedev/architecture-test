@@ -1,3 +1,5 @@
 package com.wefox.kanekotic.centralizedPayments.models
 
-data class Error(val type: String, val message: String)
+enum class ErrorType { database, network, other }
+
+data class Error(val type: ErrorType, val message: String)

@@ -1,6 +1,7 @@
 package com.wefox.kanekotic.centralizedPayments
 
 import com.wefox.kanekotic.centralizedPayments.models.Error
+import com.wefox.kanekotic.centralizedPayments.models.ErrorType
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 
 object Faker {
@@ -10,6 +11,6 @@ object Faker {
     }
 
     fun error(): Error {
-        return Error("database", "kaboom")
+        return Error(ErrorType.other, "kaboom")
     }
 }
