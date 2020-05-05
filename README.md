@@ -48,8 +48,7 @@ Architecture level:
 - [ ] Manage infrastructure with terraform and kubernetes
 - [ ] Feature toggles as a service
 
-![Untitled Diagram(1)](https://user-images.githubusercontent.com/3071208/81049420-b2e41580-8ead-11ea-974c-4fe36f6ef9ac.png)
-
+![Untitled Diagram(1) (1)](https://user-images.githubusercontent.com/3071208/81050184-16227780-8eaf-11ea-88a7-4253134fdc9c.png)
 Project level:
 - [x] Use configuration file by environment
 - [x] add linter
