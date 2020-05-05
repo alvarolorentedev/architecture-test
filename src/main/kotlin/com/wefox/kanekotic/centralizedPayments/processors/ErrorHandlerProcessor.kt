@@ -5,17 +5,19 @@ import com.wefox.kanekotic.centralizedPayments.clients.LogResponseException
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.streams.kstream.KStream
+import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.failure
 
 fun KStream<String, GenericTypeMessage<Payment>>.errorHandlerProcessor(
     logClient: LogClient
 ): KStream<String, GenericTypeMessage<Payment>> {
     return this.peek { _, value ->
-        try {
+        Result.of<Unit, LogResponseException>{
             value.errors.forEach {
-                error ->
+                    error ->
                 logClient.logError(value.value, error)
             }
-        } catch (e: LogResponseException) {
+        }.failure { e ->
             println(e)
         }
     }
