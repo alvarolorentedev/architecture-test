@@ -32,7 +32,7 @@ Architecture level:
 - [ ] add metrics (ex. use logstash with grafana for logs)
 - [ ] add test data management in platform (ex. add new field to payment contract and request headers 'test-mode')
 - [ ] add traceability data management in platform (ex. add new field to payment contract and request headers 'correlation-id')
-- [ ] have secret management in place
+- [ ] have secret management in place (ssm or vault)
 - [ ] Manage infrastructure with terraform and kubernetes
 - [ ] Feature toggles as a service
 
@@ -40,7 +40,7 @@ Project level:
 - [x] Use configuration file by environment
 - [x] add linter
 - [x] deploy to cloud using CI
-- [ ] store secrets not on configuration files
+- [x] have encrypted secrets
 - [ ] Add integration test
 - [ ] Add IoC
 - [ ] Handle unhandle exceptions

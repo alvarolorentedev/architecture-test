@@ -8,7 +8,13 @@
  
  ### postgresql
  
- library to interact with postgress using jdbc.
+ library to interact with postgress using jdbc. 
+ 
+ ### jasypt
+ 
+ library to encrypt/decrypt secrets. This is used asa an alternative to a secret store. the idea is that the secret can be set in plain text in the configuration file and the machine will have the encryption key as an environment variable.
+ 
+ currently the local encription key is set in the configuration as local passwords are not of high importance, and it also shows how the configuration library can help for loading the encryption key. 
  
  ### jackson-module-kotlin
  

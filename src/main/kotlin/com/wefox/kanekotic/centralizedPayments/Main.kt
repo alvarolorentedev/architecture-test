@@ -26,7 +26,7 @@ class Main {
             val builder = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
             val paymentPersistor =
-                PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.CONNECTION_STRING))
+                PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.getConnectionString()))
 
             if (ToggleConfiguration.offline) {
                 builder.stream(

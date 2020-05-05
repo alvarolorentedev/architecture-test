@@ -1,5 +1,15 @@
 package com.wefox.kanekotic.centralizedPayments.configurations
 
+import org.jasypt.util.text.StrongTextEncryptor
+
 object PostgressConfiguration {
-    val CONNECTION_STRING: String = FileConfig.config[postgress.connectionString]
+    val textEncryptor: StrongTextEncryptor = StrongTextEncryptor()
+
+    init {
+        textEncryptor.setPassword(FileConfig.config[jasypt.password])
+    }
+
+    fun getConnectionString(): String {
+        return textEncryptor.decrypt(FileConfig.config[postgress.connectionString])
+    }
 }

@@ -9,6 +9,10 @@ object postgress : ConfigSpec() {
     val connectionString by required<String>()
 }
 
+object jasypt : ConfigSpec() {
+    val password by required<String>()
+}
+
 object kafka : ConfigSpec() {
     object topics : ConfigSpec() {
         val online by required<String>()
@@ -45,4 +49,6 @@ object FileConfig {
         .enable(Feature.OPTIONAL_SOURCE_BY_DEFAULT)
         .from.hocon.resource("application.conf")
         .from.hocon.resource("${System.getProperty("config.env")}.conf")
+        .from.hocon.resource("${System.getProperty("config.env")}.conf")
+        .from.env()
 }
