@@ -55,7 +55,7 @@ class Main {
             val latch = CountDownLatch(1)
 
             streams.setUncaughtExceptionHandler { _, e ->
-                logClient.logError(Payment("00000", 0,"online", "00000", 0.0, 0), Error(ErrorType.other, e.message!!) )
+                logClient.logError(Payment("00000", 0, "online", "00000", 0.0, 0), Error(ErrorType.other, e.message!!))
                 System.exit(1)
             }
 
