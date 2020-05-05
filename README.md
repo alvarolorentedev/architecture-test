@@ -29,7 +29,8 @@ The code has been designed so if things need to scale diferent the application c
 #### Long Version
 
 Yuo can find the entire decision record and explanations on the next links:
-- [Development Practices](docs/development_practices.md)
+- [Development Practices](docs/practices.md)
+- [Design Decision](docs/design.md)
 - [Language Selection](docs/language.md)
 - [Frameworks Selection](docs/frameworks.md)
 - [Libraries Selection](docs/libraries.md)
