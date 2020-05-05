@@ -19,11 +19,21 @@ curl localhost:9000/start
 
 ### :memo: Notes
 
-Decision record:
+#### TL;DR;
+The current solution is a simple kotlin applcation that reads from both streams and is containarized and deployed to the cloud environment with the CI.
+
+![current status](https://user-images.githubusercontent.com/3071208/81049647-24bc5f00-8eae-11ea-9b42-f982a13c4d94.png)
+
+
+The code has been designed so if things need to scale diferent the application can easily be devided and set in diferent containers.
+#### Long Version
+
+Yuo can find the entire decision record and explanations on the next links:
 - [Development Practices](docs/development_practices.md)
 - [Language Selection](docs/language.md)
 - [Frameworks Selection](docs/frameworks.md)
 - [Libraries Selection](docs/libraries.md)
+
 
 ### :pushpin: Things to improve
 
@@ -37,6 +47,8 @@ Architecture level:
 - [ ] have secret management in place (ssm or vault)
 - [ ] Manage infrastructure with terraform and kubernetes
 - [ ] Feature toggles as a service
+
+![Untitled Diagram(1)](https://user-images.githubusercontent.com/3071208/81049420-b2e41580-8ead-11ea-974c-4fe36f6ef9ac.png)
 
 Project level:
 - [x] Use configuration file by environment
