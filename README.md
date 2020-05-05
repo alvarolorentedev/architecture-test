@@ -49,6 +49,8 @@ Architecture level:
 - [ ] Feature toggles as a service
 
 ![architecture future](https://user-images.githubusercontent.com/3071208/81050485-9648dd00-8eaf-11ea-8ee6-ff0139c3ed37.png)
+
+
 Project level:
 - [x] Use configuration file by environment
 - [x] add linter
