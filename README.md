@@ -53,12 +53,6 @@ Architecture level:
 
 
 Project level:
-- [x] Use configuration file by environment (important)
-- [x] add linter (nice to have)
-- [x] deploy to cloud using CI (important)
-- [x] have encrypted secrets (important)
-- [x] Handle unhandle exceptions (important)
-- [x] add retry for errors in clients (important)
 - [ ] Add integration test (important)
 - [ ] Make transactional adding to the database (important)
 - [ ] Add IoC (nice to have)
