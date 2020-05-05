@@ -1,5 +1,3 @@
-## Do Not Review yet
-
 ### :computer: How to execute
 
 in linux & windows
