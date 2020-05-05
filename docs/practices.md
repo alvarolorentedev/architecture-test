@@ -55,3 +55,11 @@ Integration, smoke and end to end tests can be added. Some of them will require 
  With a single environment and having test data flagged to escape the normal behavior complexity and cost can be reduced.
  
  This requires architectural changes to mark the data as test, and services should be able to consume this flag and interpret it.  
+ 
+ ## Kanban
+ 
+ After been given the task the first thing was to understand the requirements and what would make them complete stories can be found on [the kanban board](https://github.com/kanekotic/wefox-test/projects/1). Eaxch of them have their own Acceptance criteria. With the agility of addapt to changing priorities.
+ 
+ ## MVP Orientation 
+ 
+ The kanban board is divided in MVP (meaning were I think we should go live), and post mvp as value need to be delivered incrementaly.
