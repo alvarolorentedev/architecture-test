@@ -51,6 +51,7 @@
 - Testability through dependency inversion. 
 - Self contained information correctly encapsulated.
 - Treat functional streams as functional extension of specific type of stream
+- Test everything, except configuration and domain models 
 
 ## Other comments
 
