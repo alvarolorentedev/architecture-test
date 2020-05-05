@@ -22,7 +22,7 @@ curl localhost:9000/start
 #### TL;DR;
 The current solution is a simple kotlin applcation that reads from both streams and is containarized and deployed to the cloud environment with the CI.
 
-![current status](https://user-images.githubusercontent.com/3071208/81049647-24bc5f00-8eae-11ea-9b42-f982a13c4d94.png)
+![architecture current](https://user-images.githubusercontent.com/3071208/81049647-24bc5f00-8eae-11ea-9b42-f982a13c4d94.png)
 
 
 The code has been designed so if things need to scale diferent the application can easily be devided and set in diferent containers.
@@ -48,7 +48,7 @@ Architecture level:
 - [ ] Manage infrastructure with terraform and kubernetes
 - [ ] Feature toggles as a service
 
-![Untitled Diagram(1) (1)](https://user-images.githubusercontent.com/3071208/81050184-16227780-8eaf-11ea-88a7-4253134fdc9c.png)
+![architecture future](https://user-images.githubusercontent.com/3071208/81050485-9648dd00-8eaf-11ea-8ee6-ff0139c3ed37.png)
 Project level:
 - [x] Use configuration file by environment
 - [x] add linter
