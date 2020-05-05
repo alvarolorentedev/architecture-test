@@ -27,10 +27,12 @@ object kafka : ConfigSpec() {
 
 object logs : ConfigSpec() {
     val url by required<String>()
+    val maxRetries by required<Int>()
 }
 
 object payments : ConfigSpec() {
     val url by required<String>()
+    val maxRetries by required<Int>()
 }
 
 object toggles : ConfigSpec() {

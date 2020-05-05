@@ -8,11 +8,10 @@ import com.wefox.kanekotic.centralizedPayments.models.ErrorType
 import com.wefox.kanekotic.centralizedPayments.models.GenericTypeMessage
 import com.wefox.kanekotic.centralizedPayments.models.Payment
 import org.apache.kafka.streams.kstream.KStream
-import java.sql.SQLException
 
 fun KStream<String, GenericTypeMessage<Payment>>.validatePaymentProcessor(paymentClient: PaymentsClient): KStream<String, GenericTypeMessage<Payment>> {
     return this.mapValues { value ->
-        Result.of<GenericTypeMessage<Payment>, PaymentsResponseException>{
+        Result.of<GenericTypeMessage<Payment>, PaymentsResponseException> {
             if (value.errors.isEmpty()) {
                 paymentClient.validatePayment(value.value)
             }

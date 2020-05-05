@@ -9,7 +9,8 @@ import com.wefox.kanekotic.centralizedPayments.models.Payment
 class LogResponseException(cause: Throwable?) : Exception(cause)
 
 class LogClient(private val configuration: LogConfiguration) {
-    fun logError(payment: Payment, error: Error) {
+
+    fun logError(payment: Payment, error: Error, retrycount: Int = 0) {
         val httpAsync = "${configuration.url}/log"
             .httpPost()
             .header("Content-Type", "application/json")
@@ -20,10 +21,13 @@ class LogClient(private val configuration: LogConfiguration) {
                 | 'error_description': '${error.message}'
                 |}""".trimMargin()
             )
-            .responseString { _, _, result ->
+            .responseString { _, response, result ->
                 when (result) {
                     is Result.Failure -> {
-                        throw LogResponseException(result.getException())
+                        if (retrycount >= configuration.maxRetries) {
+                            throw LogResponseException(result.getException())
+                        }
+                        logError(payment, error, retrycount + 1)
                     }
                 }
             }

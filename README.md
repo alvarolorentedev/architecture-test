@@ -58,7 +58,7 @@ Project level:
 - [x] deploy to cloud using CI (important)
 - [x] have encrypted secrets (important)
 - [x] Handle unhandle exceptions (important)
-- [ ] add retry for non 400 in clients (important)
+- [x] add retry for errors in clients (important)
 - [ ] Add integration test (important)
 - [ ] Make transactional adding to the database (important)
 - [ ] Add IoC (nice to have)

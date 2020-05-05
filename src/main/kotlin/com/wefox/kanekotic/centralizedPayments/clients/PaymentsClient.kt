@@ -8,7 +8,7 @@ import com.wefox.kanekotic.centralizedPayments.models.Payment
 class PaymentsResponseException(cause: Throwable?) : Exception(cause)
 
 class PaymentsClient(private val configuration: PaymentServiceConfiguration) {
-    fun validatePayment(payment: Payment) {
+    fun validatePayment(payment: Payment, retrycount: Int = 0) {
         val httpAsync = "${configuration.url}/log"
             .httpPost()
             .header("Content-Type", "application/json")
@@ -24,7 +24,10 @@ class PaymentsClient(private val configuration: PaymentServiceConfiguration) {
             .responseString { _, _, result ->
                 when (result) {
                     is Result.Failure -> {
-                        throw PaymentsResponseException(result.getException())
+                        if (retrycount >= configuration.maxRetries) {
+                            throw PaymentsResponseException(result.getException())
+                        }
+                        validatePayment(payment, retrycount + 1)
                     }
                 }
             }
