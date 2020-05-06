@@ -7,6 +7,27 @@
 
  The pipeline is used to build and test everything before the deployment for this i used github and github actions. 
 
+## Cross functional requirements
+
+### Security
+
+make sure we do not put production secrets in the code. For this Jasypt and environment variables in the prod machine will be used, until this is moved to AWS and the posibility of using ssm or vault is provided
+
+### Performance
+
+Is a streaming application that is design to grow horizontally using kafka streams with the same application id.
+
+### Addear to coding standards
+
+Use linter to validate coding standards for kotlin are followed, if the are not followed the build will break on the commit.
+
+## Code principles
+
+- Testability through dependency inversion. 
+- Self contained information correctly encapsulated.
+- Treat functional streams as functional extension of specific type of stream
+- Test everything, except configuration and domain models 
+
 ## Code Structure
 
 ```
@@ -44,15 +65,3 @@
         `-- ...
 
 ```
-
-
-## Code principles
-
-- Testability through dependency inversion. 
-- Self contained information correctly encapsulated.
-- Treat functional streams as functional extension of specific type of stream
-- Test everything, except configuration and domain models 
-
-## Other comments
-
-Currently missing the management of other type of exceptions and also the using IoC for resolving instances.
