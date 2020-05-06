@@ -2,7 +2,6 @@ package com.wefox.kanekotic.centralizedPayments
 
 import com.github.kittinunf.result.Result
 import com.wefox.kanekotic.centralizedPayments.clients.LogClient
-import com.wefox.kanekotic.centralizedPayments.clients.LogResponseException
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.configurations.*
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
@@ -26,9 +25,9 @@ class Main {
         fun onlineStream(): KafkaStreams {
             val builderOffline = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
+            val logClient = LogClient(LogConfiguration)
             val paymentPersistor =
                 PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.getConnectionString()))
-            val logClient = LogClient(LogConfiguration)
             if (ToggleConfiguration.offline) {
                 builderOffline.stream(
                     KafkaConfiguration.OFFLINE_INPUT_TOPIC,
@@ -44,8 +43,8 @@ class Main {
                 System.exit(1)
             }
             return streamsOffline
-
         }
+
         fun offlineStream(): KafkaStreams {
             val builderOnline = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
@@ -70,9 +69,8 @@ class Main {
         }
 
         @JvmStatic fun main(args: Array<String>) {
-
             val streamsOnline = onlineStream()
-            val streamsOffline =offlineStream()
+            val streamsOffline = offlineStream()
             val latch = CountDownLatch(1)
 
             Runtime.getRuntime().addShutdownHook(object : Thread("streams-centralized-payments-shutdown-hook") {
@@ -85,20 +83,22 @@ class Main {
 
             Result.of<Unit, Exception> {
                 println("starting...")
-                if(ToggleConfiguration.offline) {
+                if (ToggleConfiguration.offline) {
                     streamsOffline.start()
                 }
-                if(ToggleConfiguration.online) {
+                if (ToggleConfiguration.online) {
                     streamsOnline.start()
                 }
                 latch.await()
-            }.fold({
-                println("closing...")
-                System.exit(0)
-            },{
-                System.exit(1)
-            })
-
+            }.fold(
+                {
+                    println("closing...")
+                    System.exit(0)
+                },
+                {
+                    System.exit(1)
+                }
+            )
         }
     }
 }

@@ -43,6 +43,7 @@ object toggles : ConfigSpec() {
 object FileConfig {
     val config = Config {
         addSpec(postgress)
+        addSpec(jasypt)
         addSpec(kafka)
         addSpec(logs)
         addSpec(payments)
@@ -50,7 +51,6 @@ object FileConfig {
     }
         .enable(Feature.OPTIONAL_SOURCE_BY_DEFAULT)
         .from.hocon.resource("application.conf")
-        .from.hocon.resource("${System.getProperty("config.env")}.conf")
         .from.hocon.resource("${System.getProperty("config.env")}.conf")
         .from.env()
 }
