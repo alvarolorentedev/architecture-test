@@ -3,8 +3,11 @@ package com.wefox.kanekotic.centralizedPayments
 import com.github.kittinunf.result.Result
 import com.wefox.kanekotic.centralizedPayments.clients.LogClient
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
-import com.wefox.kanekotic.centralizedPayments.configurations.*
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
+import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
+import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
 import com.wefox.kanekotic.centralizedPayments.models.Error
 import com.wefox.kanekotic.centralizedPayments.models.ErrorType
 import com.wefox.kanekotic.centralizedPayments.models.Payment
