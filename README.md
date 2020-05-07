@@ -65,8 +65,8 @@ Yuo can find the entire decision record and explanations on the next links:
 Architecture level:
 - [ ] provide output topic to give feedback about outcome of transaction as web is unable to know what happen with current architecture
 - [ ] make sure there are no duplicated transactions on the system
-- [ ] add observability (ex. use logstash with kibana for logs)
-- [ ] add metrics (ex. use logstash with grafana for logs)
+- [ ] add observability (ex. configure logstash in base docker image with kibana for logs)
+- [ ] add metrics (ex. configure logstash in base docker image with grafana for metrics)
 - [ ] add test data management in platform (ex. add new field to payment contract and request headers 'test-mode')
 - [ ] add traceability data management in platform (ex. add new field to payment contract and request headers 'correlation-id')
 - [ ] have secret management in place (ssm or vault)
