@@ -1,5 +1,19 @@
 ### :computer: How to execute
 
+#### Build
+Use gradle to build the application
+
+```bash
+./gradlew build
+```
+
+or if you want to have a docker image already ready to run
+```bash
+/scripts/build-docker.sh
+```
+
+
+#### Run
 in linux & windows
 ```bash
 docker-compose up
