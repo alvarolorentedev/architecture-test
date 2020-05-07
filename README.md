@@ -79,6 +79,7 @@ Architecture level:
 Project level:
 - [ ] Add integration test (important)
 - [ ] Make transactional adding to the database (important)
+- [ ] local containarized build (nice to have)
 - [ ] Add IoC (nice to have)
 - [ ] Handle deserialization errors (nice to have)
 - [ ] Handle pre deserialization errors (nice to have)
