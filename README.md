@@ -1,5 +1,17 @@
 ### :computer: How to execute
 
+#### Dependencies
+
+make sure you have installed java and the jdk in your machine. if not i recomend following the installation instructions on https://adoptopenjdk.net/. Or use native package manager in you os.
+
+Current environemnt is:
+```bash
+java --version                                                
+openjdk 14 2020-03-17
+OpenJDK Runtime Environment (build 14+36-1461)
+OpenJDK 64-Bit Server VM (build 14+36-1461, mixed mode, sharing)
+```
+
 #### Build
 Use gradle to build the application
 
