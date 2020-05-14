@@ -21,7 +21,7 @@ class LogClient(private val configuration: LogConfiguration) {
                 | 'error_description': '${error.message}'
                 |}""".trimMargin()
             )
-            .responseString { _, response, result ->
+            .responseString { _, _, result ->
                 when (result) {
                     is Result.Failure -> {
                         if (retrycount >= configuration.maxRetries) {
