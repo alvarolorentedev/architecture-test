@@ -4,7 +4,8 @@ import com.github.kittinunf.result.Result
 import com.wefox.kanekotic.centralizedPayments.clients.LogClient
 import com.wefox.kanekotic.centralizedPayments.clients.PaymentsClient
 import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration
-import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.streamsConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.offlineStreamConfig
+import com.wefox.kanekotic.centralizedPayments.configurations.KafkaConfiguration.onlineStreamConfig
 import com.wefox.kanekotic.centralizedPayments.configurations.LogConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PaymentServiceConfiguration
 import com.wefox.kanekotic.centralizedPayments.configurations.PostgressConfiguration
@@ -25,7 +26,7 @@ import org.apache.kafka.streams.kstream.Consumed
 
 class Main {
     companion object {
-        fun onlineStream(): KafkaStreams {
+        fun offlineStream(): KafkaStreams {
             val builderOffline = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
             val logClient = LogClient(LogConfiguration)
@@ -40,30 +41,28 @@ class Main {
                     .errorHandlerProcessor(logClient)
             }
 
-            val streamsOffline = KafkaStreams(builderOffline.build(), streamsConfig)
+            val streamsOffline = KafkaStreams(builderOffline.build(), offlineStreamConfig)
             streamsOffline.setUncaughtExceptionHandler { _, e ->
-                logClient.logError(Payment("00000", 0, "online", "00000", 0.0, 0), Error(ErrorType.other, e.message!!))
+                logClient.logError(Payment("00000", 0, "offline", "00000", 0.0, 0), Error(ErrorType.other, e.message!!))
                 System.exit(1)
             }
             return streamsOffline
         }
 
-        fun offlineStream(): KafkaStreams {
+        fun onlineStream(): KafkaStreams {
             val builderOnline = StreamsBuilder()
             val paymentSerde = PaymentSerde.get()
             val logClient = LogClient(LogConfiguration)
             val paymentPersistor =
                 PaymentPersistor(DriverManager.getConnection(PostgressConfiguration.getConnectionString()))
-            if (ToggleConfiguration.online) {
-                builderOnline.stream(
-                    KafkaConfiguration.ONLINE_INPUT_TOPIC,
-                    Consumed.with(Serdes.String(), paymentSerde.serde)
-                )
-                    .validatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
-                    .savePaymentProcessor(paymentPersistor)
-                    .errorHandlerProcessor(logClient)
-            }
-            val streamsOnline = KafkaStreams(builderOnline.build(), streamsConfig)
+            builderOnline.stream(
+                KafkaConfiguration.ONLINE_INPUT_TOPIC,
+                Consumed.with(Serdes.String(), paymentSerde.serde)
+            )
+                .validatePaymentProcessor(PaymentsClient(PaymentServiceConfiguration))
+                .savePaymentProcessor(paymentPersistor)
+                .errorHandlerProcessor(logClient)
+            val streamsOnline = KafkaStreams(builderOnline.build(), onlineStreamConfig)
             streamsOnline.setUncaughtExceptionHandler { _, e ->
                 logClient.logError(Payment("00000", 0, "online", "00000", 0.0, 0), Error(ErrorType.other, e.message!!))
                 System.exit(1)
@@ -85,11 +84,12 @@ class Main {
             })
 
             Result.of<Unit, Exception> {
-                println("starting...")
                 if (ToggleConfiguration.offline) {
+                    println("starting offline...")
                     streamsOffline.start()
                 }
                 if (ToggleConfiguration.online) {
+                    println("starting online...")
                     streamsOnline.start()
                 }
                 latch.await()

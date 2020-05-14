@@ -42,7 +42,7 @@ class ErrorHandlerProcessorTest {
 
         builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde)).errorHandlerProcessor(logClient).to("test-output")
 
-        testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
+        testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.offlineStreamConfig)
         inputTopic = testDriver?.createInputTopic(
             "test-input",
             StringSerializer(),

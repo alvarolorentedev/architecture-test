@@ -48,7 +48,7 @@ internal class ValidatePaymentProcessorTest {
         builder.stream("test-input", Consumed.with(Serdes.String(), testSerdes.serde))
             .validatePaymentProcessor(paymentsClient).to("test-output", Produced.with(Serdes.String(), testSerdes.serde))
 
-        testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.streamsConfig)
+        testDriver = TopologyTestDriver(builder.build(), KafkaConfiguration.offlineStreamConfig)
         inputTopic = testDriver?.createInputTopic(
             "test-input",
             StringSerializer(),
