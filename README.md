@@ -12,12 +12,19 @@ OpenJDK Runtime Environment (build 14+36-1461)
 OpenJDK 64-Bit Server VM (build 14+36-1461, mixed mode, sharing)
 ```
 
+you can also use a docker container to build this project as explained in the next step.
 #### Build
 Use gradle to build the application
 
 ```bash
 ./gradlew build
 ```
+you cn also run this with a docker container 
+
+```bash
+docker run -v `pwd`:`pwd` -w `pwd` -i -t openjdk:14-jdk ./gradlew clean build check test
+```
+
 
 or if you want to have a docker image already ready to run
 ```bash
