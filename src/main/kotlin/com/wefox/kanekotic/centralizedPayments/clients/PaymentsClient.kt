@@ -13,13 +13,13 @@ class PaymentsClient(private val configuration: PaymentServiceConfiguration) {
             .httpPost()
             .header("Content-Type", "application/json")
             .body(
-                """"{
+                """{
                     |'payment_id': ${payment.payment_id}, 
                     |'account_id': ${payment.account_id}, 
                     |'payment_type': 'online',
                     |'credit_card': ${payment.credit_card}',
                     |'amount':${payment.amount}
-                    |}"""".trimMargin()
+                    |}""".trimMargin()
             )
             .responseString { _, _, result ->
                 when (result) {

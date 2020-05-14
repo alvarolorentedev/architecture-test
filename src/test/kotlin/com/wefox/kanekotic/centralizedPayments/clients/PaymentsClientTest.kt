@@ -40,13 +40,13 @@ internal class PaymentsClientTest {
                 .withHeader("Content-Type", WireMock.equalTo("application/json"))
                 .withRequestBody(
                     WireMock.equalTo(
-                        """"{
+                        """{
                         |'payment_id': ${payment.payment_id}, 
                         |'account_id': ${payment.account_id}, 
                         |'payment_type': 'online',
                         |'credit_card': ${payment.credit_card}',
                         |'amount':${payment.amount}
-                        |}"""".trimMargin()
+                        |}""".trimMargin()
                     )
                 )
                 .inScenario("Scenario")
@@ -61,13 +61,13 @@ internal class PaymentsClientTest {
                 .withHeader("Content-Type", WireMock.equalTo("application/json"))
                 .withRequestBody(
                     WireMock.equalTo(
-                        """"{
+                        """{
                         |'payment_id': ${payment.payment_id}, 
                         |'account_id': ${payment.account_id}, 
                         |'payment_type': 'online',
                         |'credit_card': ${payment.credit_card}',
                         |'amount':${payment.amount}
-                        |}"""".trimMargin()
+                        |}""".trimMargin()
                     )
                 )
         )
