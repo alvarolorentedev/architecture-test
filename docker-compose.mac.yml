@@ -58,8 +58,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    networks:
-      - kafka-net
+    network_mode: host
     volumes:
       - ./scripts/wait-for-it.sh:/usr/local/bin/wait-for-it.sh
     command: ["wait-for-it.sh", "localhost:5432","localhost:29092","-t","100", "--", "java", "-Dconfig.env=localOsX", "-jar", "app.jar"]
