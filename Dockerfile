@@ -1,6 +1,16 @@
 FROM openjdk:14-jdk-alpine
-RUN addgroup -S wefox && adduser -S wefox -G wefox
-USER wefox:wefox
-COPY build/libs/*.jar app.jar
-COPY scripts/wait-for-it.sh wait-for-it.sh
-CMD ["java","-Dconfig.env=prod","-jar","/app.jar"]
+
+ENV APPLICATION_USER java
+RUN adduser -D -g '' $APPLICATION_USER
+
+RUN apk update && apk add bash coreutils
+RUN mkdir /app
+RUN chown -R $APPLICATION_USER /app
+
+USER $APPLICATION_USER
+
+COPY build/libs/*.jar /app/app.jar
+
+WORKDIR /app
+
+CMD ["java","-Dconfig.env=localOsX","-jar","app.jar"]
