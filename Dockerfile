@@ -13,4 +13,4 @@ COPY build/libs/*.jar /app/app.jar
 
 WORKDIR /app
 
-CMD ["java","-Dconfig.env=localOsX","-jar","app.jar"]
+CMD ["java","-Dconfig.env=prod","-jar","app.jar"]
