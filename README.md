@@ -25,22 +25,15 @@ you cn also run this with a docker container
 docker run -v `pwd`:`pwd` -w `pwd` -i -t openjdk:14-jdk ./gradlew clean build check test
 ```
 
-
-or if you want to have a docker image already ready to run
-```bash
-/scripts/build-docker.sh
-```
-
-
-#### Run
-in linux & windows
+#### Run Locally 
+start dependencies
 ```bash
 docker-compose up
 ```
 
-in osx 
-```bash 
-docker-compose -f docker-compose.mac.yml up
+start application 
+```bash
+java -Dconfig.env=localHost -jar build/libs/centrilized-payments-1.0-SNAPSHOT.jar
 ```
 
 start the process by sending curl to generate messages and clean postgress

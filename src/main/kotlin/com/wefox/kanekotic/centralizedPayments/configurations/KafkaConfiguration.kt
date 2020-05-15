@@ -16,6 +16,8 @@ object KafkaConfiguration {
             props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = FileConfig.config[kafka.serverUrl]
             props[StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG] = FileConfig.config[kafka.cacheSize]
             props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = FileConfig.config[kafka.offsetReset]
+            props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = true
+            props[StreamsConfig.MAX_TASK_IDLE_MS_CONFIG ] = Long.MAX_VALUE
             props[StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG] = CustomProcessingExceptionHandler::class.java
             return props
         }
@@ -28,6 +30,8 @@ object KafkaConfiguration {
             props[StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG] = FileConfig.config[kafka.cacheSize]
             props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = FileConfig.config[kafka.offsetReset]
             props[StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG] = CustomProcessingExceptionHandler::class.java
+            props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = true
+            props[StreamsConfig.MAX_TASK_IDLE_MS_CONFIG ] = Long.MAX_VALUE
             return props
         }
 }

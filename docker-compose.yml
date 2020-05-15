@@ -54,15 +54,3 @@ services:
     depends_on:
       - postgress
       - kafka-server
-  payments-centralized:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    networks:
-      - kafka-net
-    volumes:
-      - ./scripts/wait-for-it.sh:/usr/local/bin/wait-for-it.sh
-    command: ["wait-for-it.sh", "postgress:5432","kafka-server:9092","-t","100", "--", "java", "-Dconfig.env=local", "-jar", "app.jar"]
-    depends_on:
-      - postgress
-      - kafka-server
